@@ -22,7 +22,7 @@
   % notocintoc,                 % do not add toc to toc itself
 ]{tumDiss}
 \usepackage[utf8]{inputenc}
-
+\usepackage{svg}
 
 
 %-------------------------------------------------------------------------------
@@ -55,12 +55,12 @@
 %-------------------------------------------------------------------------------
 % Faculty
 %-------------------------------------------------------------------------------
-\faculty{Fakultät für Elektrotechnik und Informationstechnik}
+\faculty{Fakultät für Informatik}
 
 %-------------------------------------------------------------------------------
 % Degree
 %-------------------------------------------------------------------------------
-\degree{Doktor-Ingenieurs (Dr.-Ing.)}
+\degree{PhD (check specific degree))}
 
 %-------------------------------------------------------------------------------
 % Title
@@ -72,23 +72,22 @@
 % YOU ALSO NEED THE BREAK AT THE LAST LINE.
 %-------------------------------------------------------------------------------
 \title{%
-  This is a Very Long Title With Lots and Lots and Lots of\\
-  Fill Words in Order to Demonstrate how it Looks\\
+  Integration of Mixed-Criticality into Dynamic Task Migration for Real-Time Embedded Systems
 }
 % \subtitle{That is extended by using an additional subtitle}
 
 %-------------------------------------------------------------------------------
 % People
 %-------------------------------------------------------------------------------
-\author{Vorname Nachname}
-\vorsitz{Prof. Dr.-Ing. Vorname Nachname}
+\author{Octavio Ivan Delgadillo Ruiz}
+\vorsitz{Prof. Dr. Uwe Baumgarten}
 \erstpruef{Prof. Dr.-Ing. Vorname Nachname}
 
 % Use this one for a TUM professor
-% \zweitpruef{Prof. Dr.-Ing. Vorname Nachname}
+\zweitpruef{Prof. Dr.-Ing. Vorname Nachname}
 
 % Or this one for an external professor
-\zweitpruef[Technische Universität Berlin]{Prof. Dr.-Ing. Vorname Nachname}
+%\zweitpruef[Technische Universität Berlin]{Prof. Dr.-Ing. Vorname Nachname}
 
 % Optionally, add a third examiner
 %\drittpruef[RWTH Aachen]{Prof. Dr.-Ing. Max Mustermann}
@@ -142,7 +141,15 @@
 \tikzset{>=stealth}
 \usetikzlibrary{patterns}
 \usetikzlibrary{pgfplots.statistics}
-
+\usepackage[%
+	backend=bibtex,
+	url=false,
+	style=alphabetic,
+	maxnames=4,
+	minnames=3,
+	maxbibnames=99,
+	giveninits,
+	uniquename=init]{biblatex} % TODO: adapt citation style
 % code block insertion
 \usepackage{moreverb}
 \usepackage{listings}
@@ -168,7 +175,7 @@
   otherkeywords    = {
     uint64_t,
     uint32_t,
-    uint16_t,
+    uint16_t,Poccistraße, Múnich-Ludwigsvorstadt-Isarvorstadt
     uint8_t,
     u64,
     u32,
@@ -286,8 +293,6 @@
 \frontmatter
 \maketitle
 
-
-
 %-------------------------------------------------------------------------------
 \chapter{Abstract}
 
@@ -312,10 +317,8 @@
 
 %-------------------------------------------------------------------------------
 \mainmatter
-\chapter{Introduction}
-\label{chap:introduction}
 
-\lipsum[1-4]
+\input{chapters/01_introduction.tex}
 
 
 
@@ -326,6 +329,10 @@ Example citations~\cite{barham2003xen, LIS}.
 Example acronym usage \gls{cpu}.
 
 
+
+\input{chapters/03_approach.tex}
++
+'
 \chapter{Content}
 \label{chap:content}
 
@@ -493,7 +500,7 @@ Example acronym usage \gls{cpu}.
 
 \begin{figure}[thb]
   \centering
-  \includegraphics{shapes}
+  %\includesvg{shapes}
 
   \caption{Example Shapes from an SVG.}
   \label{fig:example_svg}
@@ -581,8 +588,8 @@ int main (void) {
 %\backmatter
 % unsrturl-custom works only with hyperref loaded
 % use other styles like unsrt when hyperref is not loaded
-\bibliographystyle{unsrturl-custom}
-\bibliography{bibliography}
+
+\printbibliography{}
 
 
 
