@@ -1,0 +1,84 @@
+\boolfalse {citerequest}\boolfalse {citetracker}\boolfalse {pagetracker}\boolfalse {backtracker}\relax 
+\babel@toc {american}{}
+\defcounter {refsection}{0}\relax 
+\contentsline {chapter}{\nonumberline Abstract}{iii}{chapter*.1}%
+\defcounter {refsection}{0}\relax 
+\contentsline {chapter}{\nonumberline Zusammenfassung}{v}{chapter*.2}%
+\defcounter {refsection}{0}\relax 
+\contentsline {chapter}{Contents}{vii}{chapter*.3}%
+\defcounter {refsection}{0}\relax 
+\contentsline {chapter}{List of Figures}{ix}{chapter*.4}%
+\defcounter {refsection}{0}\relax 
+\contentsline {chapter}{List of Tables}{xi}{chapter*.5}%
+\defcounter {refsection}{0}\relax 
+\contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.1}%
+\defcounter {refsection}{0}\relax 
+\contentsline {chapter}{\numberline {2}State of the Art}{5}{chapter.2}%
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {2.1}Automotive Embedded Devices / Multicore}{5}{section.2.1}%
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {2.2}Real-Time Distributed Systems}{5}{section.2.2}%
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {2.3}Mixed Criticality Scheduling}{5}{section.2.3}%
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {2.4}Task Migration (considering Mixed Criticality)}{6}{section.2.4}%
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {2.5}Vehicular Edge Cloud}{6}{section.2.5}%
+\defcounter {refsection}{0}\relax 
+\contentsline {chapter}{\numberline {3}Methodology and Concepts}{7}{chapter.3}%
+\defcounter {refsection}{0}\relax 
+\contentsline {chapter}{\numberline {4}Approach}{9}{chapter.4}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {4.0.1}Contributions}{10}{subsection.4.0.1}%
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {4.1}General Overview}{11}{section.4.1}%
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {4.2}Overall System Architecture}{14}{section.4.2}%
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {4.3}Operating System / FreeRTOS implementation + internal behavior}{15}{section.4.3}%
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {4.4}Task-Device Partitioning / Migration Planning}{16}{section.4.4}%
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {4.5}Internal Communication}{16}{section.4.5}%
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {4.6}External Communication}{16}{section.4.6}%
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {4.7}Use Cases / Test Cases}{17}{section.4.7}%
+\defcounter {refsection}{0}\relax 
+\contentsline {chapter}{\numberline {5}Base Operating System}{19}{chapter.5}%
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {5.1}Architecture}{19}{section.5.1}%
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {5.2}Mixed Criticality Scheduler}{21}{section.5.2}%
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {5.3}Cross-Platform Task Loading}{21}{section.5.3}%
+\defcounter {refsection}{0}\relax 
+\contentsline {chapter}{\numberline {6}Task Migration Implementation}{23}{chapter.6}%
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {6.1}Statefulness and Checkpoint Mechanism}{23}{section.6.1}%
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {6.2}High Criticality Strategy}{24}{section.6.2}%
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {6.3}Low Criticality Strategy}{25}{section.6.3}%
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {6.4}MEC: Virtual Devices}{25}{section.6.4}%
+\defcounter {refsection}{0}\relax 
+\contentsline {chapter}{\numberline {7}System Integration}{27}{chapter.7}%
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {7.1}Real-Time Constraints in the Distributed System}{27}{section.7.1}%
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {7.2}Adaption of the ML algorithm}{27}{section.7.2}%
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {7.3}Virtual and Physical Devices}{27}{section.7.3}%
+\defcounter {refsection}{0}\relax 
+\contentsline {chapter}{\numberline {8}Results and Evaluation}{29}{chapter.8}%
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {8.1}Test Setup}{29}{section.8.1}%
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {8.2}Discussion}{29}{section.8.2}%
+\defcounter {refsection}{0}\relax 
+\contentsline {chapter}{\numberline {9}Conclusion \& Outlook}{31}{chapter.9}%
+\defcounter {refsection}{0}\relax 
+\contentsline {chapter}{\nonumberline Bibliography}{33}{chapter*.8}%
+\defcounter {refsection}{0}\relax 
+\contentsline {chapter}{\numberline {A}Additional Stuff}{35}{appendix.A}%

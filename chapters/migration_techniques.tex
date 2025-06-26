@@ -1,14 +1,56 @@
 % !TeX root = ../main.tex
 % Add the above to each chapter to make compiling the PDF easier in some editors.
 
-\chapter{Task Migration}\label{chap:migration}
+\chapter{Task Migration Implementation}\label{chap:migration}
+
+\section{Statefulness and Checkpoint Mechanism}
+In order to keep the running state of the system tasks during migration (i.e. making it stateful), a checkpoint mechanism should be implemented. In this context, checkpoint refers to a data file containing all relevant variables to store or reload a snapshot of the task's state, whereas mechanism refers to the whole process of storing and reloading the task. There is a trade-off between the precision of the checkpoint mechanism and its simplicity and amount of checkpoint data. For example, a task's state could be very precisely restored down to a specific instruction if stuff like program counter and full task context (e.g. stack and heap, and nested data structure references) can be snapshotted. Another advantage of this strategy is that tasks could be implemented without being specific to the system, but the drawback is that it might require keeping a lot of data and a more complicated implementation at kernel level. On the other hand, checkpoints can be defined in the code at some strategic steps, along with the most relevant processed variables (e.g. for an object detection algorithm after every processing step of an image). This might mean that some work could be lost after migration, but the checkpoint structure would be simple and the mechanism would involve only some code jumps, although the task would need to be specifically implemented to work with such a mechanism. The approach for the checkpoint mechanism in this work is closer to the latter, and the reasoning behind this design decision, as well as the details of its implementation are described next.
+
+First of all, let us recall the nature of the system and the executed tasks. As mentioned before, these tasks are all assumed to be periodic, in each iteration (job) needing to process some information, possibly based on sensors or other peripherals, and generating an output, that might also depend on previous iterations. Given this behavior, it is assumed that at least, a checkpoint can be stored after a full iteration while keeping a meaningful state. Additionally, other internal checkpoints could be made by keeping jump tags if higher level of granularity is needed. During development phase, the checkpoint has to be designed in the form of a task structure which can contain all the relevant data and be stored in a file. At runtime, task reloading requires three fundamental steps, as shown in diagram...: 1) reading the existing checkpoint to get previous state, 2) performing the actual job, and 3) writing back the new state in a checkpoint. Additionally, if jump tags are stored, after retrieving the previous state, the corresponding jump is performed, while it is also important to save the checkpoint before the next sub step of the job (i.e. next jump tag), including a hint to the jump tag. The design decision to follow this strategy was taken considering the smaller overhead at runtime and during implementation of the OS. Also, since aforementioned steps 1 and 3 (reading and writing back the state) would be the same for most simple applications, they can be pre-implemented via a library, making it only necessary to define the task state data structure, and otherwise keeping the application code fairly simple. Furthermore, flexibility for fine granularity in the checkpoint keeping is possible through the mentioned jump tags and by allowing to override the specific behavior of steps 1 and 3.
+
+An example of the above mentioned behavior could be a SLAM (simultaneous localization and mapping) algorithm, which builds a cumulative map of the surroundings based on the received sensor data and finds the current position of the exploring agent (e.g. a vehicle) in that map. In this case, results of previous jobs (the generated map and the agent's position) are also used to generate the results of the current iteration. For this task, a minimal state could be stored by keeping track of those results, but as it is a more complex task with several steps, jump tags could be kept for example after each of the relevant steps: pre-processing sensor data, sensor fusion, identifying agent's position, filling the map with new data. This second behavior allows for a finer granularity for migrating the task while still avoiding the overhead of a full kernel-space snapshot.
+
+While the previous paragraphs define the general behavior of the checkpoint mechanism, it is also necessary to define the way in which it is transmitted from the device currently executing the task (source) to the device that will execute next (target). As mentioned before, the user should define a data structure with all relevant data inside the task code, this will be then accessible through a void pointer from the OS in binary format, which would be further processed to share the checkpoint with the migration target. In general, defining the data structure in this way allows for a variety of implementations, as long as the data stored in it keeps its integrity, and the specific transmission approach will depend on the specific migration strategy according to the criticality of the task and the type of target device as described in the next sections.
+
+
+\section{High Criticality Strategy}
+*** MISSING details now, but idea is explained in approach***
+\begin{itemize}
+	\item The idea is based on a premise that a shared memory approach would allow faster and less data-intensive transmission for performing the migration
+	\item The task has 3 possible states on each device: off, running and (hot) standby. For tasks that do not require redundancy at runtime, only one (active) device (node in the distributed system) keeps them in running state, while a selection of backup nodes keep it in standby mode. To enable runtime redundancy, multiple nodes can be active. Nodes that are neither active nor selected as backup keep task in an off state.
+	\item Both running and hot-standby modes keep the task loaded on the system and ready to execute, but standby mode does not make task perform any work, while running mode does.
+	\item State is kept through a shared memory approach. In the scope of this work (so far), the concept is explored using multiple cores in a single multicore processor as if they were independent nodes, with the processor memory working as the shared memory.
+	\item Conceptually, this memory can represent a distributed shared memory (DSM), which could be further integrated using a real-time communication protocol to keep time-bound behavior. Example of this approach might be... (Do proper referencing...) https://doi-org.eaccess.tum.edu/10.1007/s10586-017-1140-9 https://dl.acm.org/doi/abs/10.1007/s10586-017-1140-9
+	\item The idea would be to keep a fixed reference to this space in memory for all running and standby instances, which would be read before and updated after each executed job.
+\end{itemize}
+
+
+\section{Low Criticality Strategy}
+\begin{itemize}
+	\item Based greatly on Yinbo's thesis
+	\item Here, idea is that tasks can be precompiled to ELF files which can be loaded dynamically upon request
+	\item Task data are stored in a separate file that can be loaded with the ELF and later stored upon request
+	\item Explain how tasks must be compiled and prepared to provide valid ELF files.
+	\item Loader would work with any scheduling algorithm, ensuring that MC can be respected in the system
+\end{itemize}
+
+
+
+
 
 
 \section{MEC: Virtual Devices}
 \begin{itemize}
+	\item Based greatly on Roberto's thesis
 	\item Here, idea is that the MEC can host containerized versions of the devices -- Implementation specific details for the containers are out of scope in the thesis, as they are part of Bernhard's idea
-	\item Explain how the migration to and from the cloud works 
+	\item Explain briefly that it is assumed the implementation of the containerized version of the tasks is fully implemented in the scope of future work
+	\item Explain how the migration to and from the cloud works
+	\item Explain how the migration to and from the MEC is integrated into the system architecture, especially how it is considered when taking a decision to migrate to MEC or to another physical device
+	\item Discuss missing implementation details
 \end{itemize}
 
+The work presented in (cite ROberto's thesis) showed the possibility of containerizing a POSIX port of FreeRTOS and running it on a Linux server. Following this concept, Axcan OS was ported to make it compatible with such a container approach, making it possible to load on the virtual devices exactly the same ELF executables that are loaded for the real embedded devices, avoiding the need for recompiling the tasks. Furthermore, the features of Axcan OS allow the tasks to access the system services in a seamless manner.
+
+The container-compatible POSIX port of Axcan OS requires a different management of memory and peripherals, especially due to the restrictions introduced by the Linux kernel, for example due to the exception level or the rights assigned to memory allocated with functions like malloc or mmap. However, Axcan OS offers an abstraction layer that offers the features to the user applications on the same way on both platforms.
 	
 
