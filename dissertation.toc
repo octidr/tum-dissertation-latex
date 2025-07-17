@@ -49,44 +49,46 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {section}{\numberline {5.1}Architecture}{20}{section.5.1}%
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {5.2}Remote Task Deployment}{21}{section.5.2}%
+\contentsline {section}{\numberline {5.2}Dynamic Task Deployment}{23}{section.5.2}%
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {5.3}Mixed Criticality Scheduler}{22}{section.5.3}%
+\contentsline {subsection}{\numberline {5.2.1}Multi-Core Deployment}{23}{subsection.5.2.1}%
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {5.4}Cross-Platform Task Loading}{22}{section.5.4}%
+\contentsline {section}{\numberline {5.3}Mixed-Criticality Scheduler}{24}{section.5.3}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {5.4.1}Hardware Abstraction Layer}{22}{subsection.5.4.1}%
+\contentsline {section}{\numberline {5.4}Cross-Platform Task Loading}{24}{section.5.4}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {5.4.2}User Application Requirements}{23}{subsection.5.4.2}%
+\contentsline {subsection}{\numberline {5.4.1}Hardware Abstraction Layer}{24}{subsection.5.4.1}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {5.4.3}Summary}{24}{subsection.5.4.3}%
+\contentsline {subsection}{\numberline {5.4.2}User Application Requirements}{26}{subsection.5.4.2}%
 \defcounter {refsection}{0}\relax 
-\contentsline {chapter}{\numberline {6}Task Migration Implementation}{25}{chapter.6}%
+\contentsline {section}{\numberline {5.5}Summary}{27}{section.5.5}%
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {6.1}Statefulness and Checkpoint Mechanism}{25}{section.6.1}%
+\contentsline {chapter}{\numberline {6}Task Migration Implementation}{29}{chapter.6}%
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {6.2}High Criticality Strategy}{26}{section.6.2}%
+\contentsline {section}{\numberline {6.1}Statefulness and Checkpoint Mechanism}{29}{section.6.1}%
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {6.3}Low Criticality Strategy}{27}{section.6.3}%
+\contentsline {section}{\numberline {6.2}High Criticality Strategy}{30}{section.6.2}%
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {6.4}MEC: Virtual Devices}{27}{section.6.4}%
+\contentsline {section}{\numberline {6.3}Low Criticality Strategy}{31}{section.6.3}%
 \defcounter {refsection}{0}\relax 
-\contentsline {chapter}{\numberline {7}System Integration}{29}{chapter.7}%
+\contentsline {section}{\numberline {6.4}MEC: Virtual Devices}{31}{section.6.4}%
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {7.1}Real-Time Constraints in the Distributed System}{29}{section.7.1}%
+\contentsline {chapter}{\numberline {7}System Integration}{33}{chapter.7}%
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {7.2}Adaption of the ML algorithm}{29}{section.7.2}%
+\contentsline {section}{\numberline {7.1}Real-Time Constraints in the Distributed System}{33}{section.7.1}%
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {7.3}Virtual and Physical Devices}{29}{section.7.3}%
+\contentsline {section}{\numberline {7.2}Adaption of the ML algorithm}{33}{section.7.2}%
 \defcounter {refsection}{0}\relax 
-\contentsline {chapter}{\numberline {8}Results and Evaluation}{31}{chapter.8}%
+\contentsline {section}{\numberline {7.3}Virtual and Physical Devices}{33}{section.7.3}%
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {8.1}Test Setup}{31}{section.8.1}%
+\contentsline {chapter}{\numberline {8}Results and Evaluation}{35}{chapter.8}%
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {8.2}Discussion}{31}{section.8.2}%
+\contentsline {section}{\numberline {8.1}Test Setup}{35}{section.8.1}%
 \defcounter {refsection}{0}\relax 
-\contentsline {chapter}{\numberline {9}Conclusion \& Outlook}{33}{chapter.9}%
+\contentsline {section}{\numberline {8.2}Discussion}{35}{section.8.2}%
 \defcounter {refsection}{0}\relax 
-\contentsline {chapter}{\nonumberline Bibliography}{35}{chapter*.11}%
+\contentsline {chapter}{\numberline {9}Conclusion \& Outlook}{37}{chapter.9}%
 \defcounter {refsection}{0}\relax 
-\contentsline {chapter}{\numberline {A}Additional Stuff}{37}{appendix.A}%
+\contentsline {chapter}{\nonumberline Bibliography}{39}{chapter*.14}%
+\defcounter {refsection}{0}\relax 
+\contentsline {chapter}{\numberline {A}Additional Stuff}{41}{appendix.A}%
