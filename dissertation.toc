@@ -47,7 +47,7 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {chapter}{\numberline {5}Base Operating System: Axcan OS}{19}{chapter.5}%
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {5.1}Architecture}{19}{section.5.1}%
+\contentsline {section}{\numberline {5.1}Architecture}{20}{section.5.1}%
 \defcounter {refsection}{0}\relax 
 \contentsline {section}{\numberline {5.2}Remote Task Deployment}{21}{section.5.2}%
 \defcounter {refsection}{0}\relax 
@@ -58,6 +58,8 @@
 \contentsline {subsection}{\numberline {5.4.1}Hardware Abstraction Layer}{22}{subsection.5.4.1}%
 \defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {5.4.2}User Application Requirements}{23}{subsection.5.4.2}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {5.4.3}Summary}{24}{subsection.5.4.3}%
 \defcounter {refsection}{0}\relax 
 \contentsline {chapter}{\numberline {6}Task Migration Implementation}{25}{chapter.6}%
 \defcounter {refsection}{0}\relax 
