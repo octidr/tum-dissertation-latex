@@ -77,6 +77,8 @@ The first step in achieving mixed criticality and respecting real-time behavior 
 
 **** Need to finalize implementing scheduling policies, then explain that into detail***
 
+Furthermore, the real-time capabilities of the scheduler are enhanced by synchronizing the internal timer of the different nodes via precision-time protocol (PTP). A periodic task running at a low frequency allows then nodes to stay synchronized under a defined maximal time phase. This allows then the keeping of deadlines on any node, even when migrating tasks, by modifying the deadline to subtract that maximal phase.
+
 \section{Cross-Platform Task Loading}
 
 To achieve the goal of executing the same application files on both physical and virtual ECU devices, the system integrates an ELF loader. This ELF loader, implemented to a great extent in collaboration with Yinbo Zhou in the scope of his master's thesis, enables the execution of multiple tasks, packed in the form of pre-compiled ELF files and with an additional data file. This approach tackles both challenges of allowing the dynamic loading of tasks and of stateful migration to the extent desired. In order for applications to be compatible with the task loader, they need to fulfill some requirements when compiled. The implemented loader is lightweight and meant to load the same application files on on multiple underlying hardware / software stacks, as shown in Fig. \ref{fig:multiplatform_tasks}, as long as an Axcan OS port runs on the target and the CPU architecture is the same as the target architecture for the compiled application, which in our case is always ARM Aarch64.
