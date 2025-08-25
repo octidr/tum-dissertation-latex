@@ -1,0 +1,12 @@
+*.acn
+*.aux
+*.bbl
+*.blg
+*-blx.bib
+*.ist
+*.lof
+*.log
+*.lot
+*.out
+*.synctex.gz
+*.toc
