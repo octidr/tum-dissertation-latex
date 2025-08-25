@@ -27,7 +27,8 @@
 \DeclareOption{pgfplots}{\pgfplotstrue}%
 \DeclareOption*{\PassOptionsToPackage{\CurrentOption}{xcolor}}%
 \ProcessOptions\relax%
-\RequirePackageWithOptions{xcolor}%
+%\RequirePackageWithOptions{xcolor}%
+\RequirePackage{xcolor}%
 \ifpgfplots
   \RequirePackage{pgfplots}%
   \RequirePackage{pgfplotstable}%
