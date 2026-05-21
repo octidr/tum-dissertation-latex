@@ -1,90 +1,565 @@
 % !TeX root = ../main.tex
 % Add the above to each chapter to make compiling the PDF easier in some editors.
+\chapter{Background and Fundamentals}
+\label{chap:background}
 
-\chapter{Introduction}\label{chap:introduction}
-Trends in the automotive industry are shaping the future of cars in a way that electronic and computing devices are becoming increasingly important. In fact, the majority of innovations in the automotive sector are related to electronic systems, either in the form of hardware or software~\parencite{ey1}. Developments such as vehicle electrification, autonomous driving and vehicle connectivity are only some examples of automotive applications where computer processing has a big relevance~\parencite{pwc1}. It is therefore reasonable to seek for approaches to ensure their usage is efficient and safety requirements are met.
+This chapter introduces the fundamental concepts required for
+understanding the research presented in this dissertation.
+First, the foundations of real-time systems and scheduling
+theory are discussed, including timing constraints, scheduling
+algorithms, and real-time operating systems. Afterwards, the
+concept of mixed-criticality systems is introduced together
+with the challenges associated with resource sharing and
+adaptability in modern embedded platforms.
 
-In modern cars, dozens of computers, commonly known as electronic control units (ECUs), execute the various computing tasks present in a car. This number is likely to increase if we consider past trends: as the tasks performed by ECUs often have safety-critical constraints, such as real-time capabilities, they are commonly integrated to serve a specific purpose, avoiding conflicts caused by the parallel execution of other tasks~\parencite{vipin1, vipin2}. However, this strategy has shortcomings in the form of inefficient usage of the electronic devices (many tasks are only executed in specific and rare situations), reduced fault tolerance if a system fails, and increased weight and cost of the vehicle due to the high number of ECUs and cables~\parencite{vipin2, baunach1}. Hence, it is an important topic in the automotive industry to find solutions for these issues, especially optimizing costs, while ensuring vehicle safety is kept~\parencite{mckinsey1}.
+Subsequently, distributed real-time systems and modern
+automotive computing architectures are analyzed, including
+heterogeneous systems, edge computing, and task offloading
+concepts. Finally, the chapter presents the networking
+technologies and communication mechanisms commonly used in
+distributed cyber-physical systems with real-time requirements.
 
-ECU consolidation is an approach for the reduction in the number of electronic devices in the car. The idea is to consolidate the execution of the tasks from many single-purpose ECUs to a few powerful, multi-purpose ECUs. However, the implementation of ECU consolidation raises other challenges: as more tasks need to be executed on the same platform, higher computation and safety requirements must be met. Regarding safety, it is important to consider the added complexity, and cases where a hardware or software failure occur need to be considered, since a single failure could block many tasks and cause major issues. Also, some safety-critical tasks require redundancy to ensure their correct execution~\parencite{mundhenk1}. These challenges have motivated previous research at the chair of operating systems of the Technical University of Munich, where research on projects such as KIA4SM and MaLSAMi has explored the concept of dynamic task migration as a process where the execution of any tasks could move at any given time from one ECU to another. This would allow tasks to finish execution in case an ECU is overloaded or stops working, effectively allowing them to finish executing and meet their real-time constraints.
+\section{Real-Time Systems}
+\label{sec:rtsystems}
 
-Previous work at the chair has divided the task migration process in two stages: planning and execution. The planning is the stage which generates a task distribution to the devices that will execute them. The execution is then responsible for allowing tasks to migrate from one device to another, while ensuring their progress is not lost and the execution continues and finishes correctly at the target device. So far, the work performed at the chair has explored the approach with a single criticality level, using different priority strategies for scheduling the tasks on an ECU (that is, deciding which task should get the processor and be executed at a given time). While this idea is in itself an important contribution, it is relevant to note that in many safety-critical embedded applications, such as the aerospace and automotive industries, different criticality levels exist, which are often defined in standards such as the ISO 26262, which defines the ASIL (automotive safety integrity level). For example, in a car, the correct functioning of the ABS is highly critical, as a failure could be fatal. In contrast, the functionality of the radio system has a lower criticality, as an eventual failure would not cause any issue other than an unpleasant trip. This idea is also important because in these industries there exist certification agencies that validate a system before it can be distributed.
+Real-time systems are computing systems in which correctness
+depends not only on the logical correctness of the produced
+results, but also on the time at which these results are
+generated~\cite{buttazzo2011}. In such systems, timing
+constraints are treated as first-class requirements and must
+be satisfied in order to guarantee correct system behavior.
 
-For this reason, and due to the relevance of the concept of mixed-criticality in many industries, it would be important to expand the research on task migration to explore its integration. In particular, expanding the execution stage to ensure tasks with higher criticality are always able to execute properly and meet their deadline is crucial. But also it is important to find a balance between resource efficiency and reliability of the migration process for different criticality levels. Therefore, the work proposed as part of this PhD program aims to implement a strategy for the migration execution at different levels of criticality. Additionally, the mixed-criticality concept has to be integrated as well into the planning stage. This will be also explored in the scope of this research, although the main focus will be in the execution stage.
+Real-time systems are commonly classified into hard real-time,
+firm real-time, and soft real-time systems depending on the
+consequences of missing timing deadlines. In hard real-time
+systems, missing a deadline may lead to catastrophic failures,
+making deterministic timing guarantees essential. Soft
+real-time systems, on the other hand, can tolerate occasional
+deadline misses with degraded quality of service.
 
-Although the work performed as part of this research is based on previous developments at the chair and will likely extend existent tools, it includes the development of a platform that implements mixed-criticality scheduling, as well as a migration system that involves the concept in different areas in the planning and execution stages. This includes the selection of hardware and software, as well as network interfaces. Also, verification of the algorithms used will be performed to ensure safety and timing requirements are met.
+Modern cyber-physical systems such as automotive platforms,
+industrial controllers, robotics systems, and autonomous
+vehicles increasingly depend on strict timing guarantees while
+simultaneously requiring higher computational flexibility and
+adaptability~\cite{baunach2018,sdv2024}. This combination
+introduces significant challenges for system design and
+resource management.
 
-\section*{Related Work}\label{section:relatedwork}
-At the chair, previous research projects, such as KIA4SM and MaLSAMi, have explored the possibility of migrating tasks running on a device to another in a real-time capable system (for example, ECUs in a vehicle) under certain conditions. As mentioned before, in these works, the migration was divided into two main stages: The first is the migration planning, which determines the hardware that tasks will be migrated to, should the original hardware not be able to fulfill its duty (for example, if there is a failure in that hardware or if the real-time constraints or deadlines would be violated). The second is the execution of the migration, which ensures that corresponding tasks can be migrated from the source device to the target device while keeping their current state.
+\subsection{Scheduling Theory}
 
-The migration execution has been explored previously at the chair, for example in projects KIA4SM and HaCRoM. This was explored in the form of a real-time checkpoint-restore mechanism. This involves creating and storing a snapshot of running tasks in a shared memory or copying the memory from a device to another. The work is based on Fiasco.OC and Genode OS. 
+Scheduling is one of the core concepts in real-time systems
+and refers to the process of determining the execution order
+of tasks while satisfying timing constraints and resource
+limitations. Classical real-time scheduling approaches include
+fixed-priority scheduling algorithms such as Rate Monotonic
+(RM), as well as dynamic-priority approaches such as
+Earliest-Deadline-First (EDF).
 
-MaLSAMi and subsequent theses analyzed migration planning, with researchers performing schedulability analysis based on machine learning (specifically, on neural networks). Machine learning was picked over traditional mathematical approaches such as the ones proposed by Buttazzo~\parencite{buttazzo1}, because the recurrent calculations can become too complex for complex tasks and for big task sets, and they often lead to a pessimistic calculation of the system utilization. By predicting the feasibility of a task set using machine learning algorithms, potentially faster but less precise results are obtained, as demonstrated by previous theses by Taieb~\parencite{taieb1}, Utz~\parencite{utz1} and Blieninger~\parencite{blieninger1}. The predictions provided by the machine-learning approach indicate whether a task set is 100\% schedulable or not, but they are not completely safe, since false positive predictions may occur. This approach could be a potentially powerful solution for enabling the execution at run-time of the real-time capable migration planning. 
+Liu and Layland~\cite{liu1973} introduced one of the
+foundational scheduling models for periodic real-time tasks,
+establishing schedulability bounds for RM and EDF scheduling.
+EDF scheduling is particularly relevant due to its optimality
+properties for uniprocessor systems under specific assumptions.
 
-Additionally, a few different platforms and setups have been explored in these projects. The used operating systems running on the ECUs are Genode OS, as used in MaLSAMi and a few theses, a real-time operating system based on an extension of Genode OS with Fiasco.OC, as used in KIA4SM~\parencite{kia1} and HaCRoM, and FreeRTOS, as used by Delgadillo~\parencite{delgadillo1}. These developments are considered in the selection of the platform.
+As modern embedded systems evolved towards multicore and
+heterogeneous architectures, scheduling approaches also became
+more complex. Multiprocessor scheduling introduces additional
+challenges including task migration overhead, synchronization,
+resource sharing, cache interference, and communication
+latency~\cite{megel2010}.
 
-These projects have achieved research-relevant results in their segments, but the concept of mixed-criticality has not been explored in related chair internal work. It is therefore necessary to look at relevant chair-external work. In particular, those regarding mixed-criticality scheduling strategies and related to task migration are reviewed next.
+\subsection{Real-Time Operating Systems}
 
-Until last decade, the concept of mixed criticality and its involvement in the scheduling of tasks has been mostly explored for single processor systems. In 2011, Baruah et al. proposed an adaptive mixed-criticality scheduling algorithm which set different WCET for different criticality levels of the same task, changing to a higher criticality mode if a job would not report completion after its low criticality deadline~\parencite{baruah2}. Then, also in 2011, Baruah et al. proposed a mixed-criticality scheduling algorithm called EDF-VD for a single processor, which introduces a high criticality mode that modifies high criticality task deadlines to give them a higher priority over low criticality task~\parencite{baruah1}. This algorithm is defined for any number of criticality levels. In 2012 Li and Baruah proposed an extension of the EDF-VD scheduling algorithm to multiprocessors by adding fpEDF strategy, which adds higher priority to tasks with utilization values higher than 0.5~\parencite{libaruah1}. Their approach did not explore migration strategies, but was one of the first implementations of a mixed-criticality scheduler on a multiple processor system. In 2015, Gratia et al. adapted RUN, a global multiprocessor scheduling algorithm, to support mixed criticality~\parencite{gratia1}. This approach also considers only a dual criticality system, and only considers the migration of low criticality tasks.
+Real-Time Operating Systems (RTOSs) provide the software
+infrastructure required for executing time-critical tasks
+while maintaining deterministic system behavior. Compared to
+general-purpose operating systems, RTOSs prioritize
+predictability, bounded latency, and deterministic scheduling
+behavior over throughput optimization.
 
-In 2018, Ramanathan and Easwaran investigated an approach for mixed-criticality scheduling on multiple processors that involved partial migration based on fixed partitions for some tasks and leaving some low criticality tasks free to execute on any available resource~\parencite{ramanathan1}. In 2019, Zeng et al. tried a similar approach~\parencite{zeng1}. However, their approaches only considered dual-criticality; alsoonly low criticality tasks would migrate from one processor to another, to ensure these tasks also get execution time, even when processors enter high criticality mode and focus on finishing high criticality jobs. In the case of high criticality tasks, they were mapped statically to a single processor.
+Common RTOS functionalities include task scheduling,
+inter-process communication, synchronization primitives,
+interrupt handling, and memory management. Depending on the
+system requirements, RTOSs may support static scheduling,
+dynamic scheduling, partitioning, or mixed-criticality
+execution models.
 
-It is worth noting that to my knowledge, research on mixed-criticality task migration of high criticality tasks, especially applied to the idea of ECU consolidation, has not been published. A possible reason for the lack of research in this area is the fact that nowadays safety is valued much higher than resource efficiency, thus overseeing the potential for optimization in this aspect. However, in my opinion, it should be possible to achieve both goals by implementing a holistic strategy and therefore it is an area where research can contribute importantly.
+In distributed and heterogeneous systems, RTOSs additionally
+play an important role in enabling communication, coordination,
+and resource sharing between different hardware nodes. The
+ability to support runtime adaptation and dynamic task
+migration increasingly represents an important requirement for
+modern distributed embedded systems.
 
-\section*{Description of the Approach}\label{section:descriptionapproach}
+\section{Mixed-Criticality Systems}
+\label{sec:mcs}
 
-As mentioned before, the main objective of the proposed research is to achieve the integration of mixed criticality into the task migration process. The proper integration would require different strategies for the different criticality modes. For this reason, it is first important to define what is understood under mixed criticality in the scope of this work. While many publications consider only two criticality levels (high and low), the standards commonly describe several of them. In this work, the concept of multiple criticality levels will be used, aiming for an implementation with at least 3 to 4 levels, or following the ASIL standard in ISO 26262. Multiple criticality levels are proposed over only two as this represents real situations better, where tasks can have intermediate criticality levels. One concept that should be covered is the consideration of different execution times according to a criticality level, as normally higher criticality levels offer pessimistic WCET estimates to ensure correct behavior occurs, but actual execution times are often lower. This is a concept that is explored in many publications and is often necessary to ensure compliance with certification authorities. An extension to an arbitrary number of criticality levels is to be explored too. 
+Mixed-criticality systems (MCS) are systems in which
+applications with different levels of criticality coexist on
+shared hardware resources~\cite{vestal2007,burns2017}. Such
+systems are especially relevant in domains including
+automotive systems, avionics, robotics, and industrial
+automation, where safety-critical and non-safety-critical
+applications execute simultaneously within the same platform.
 
-The first element that is needed in the system developed is the integration of a mixed-criticality scheduler for each of the devices. This should ensure that for any given device, the tasks with a higher criticality will never miss the deadline for a job, while being more flexible for lower criticality levels. In this regard, exploring different mixed-criticality scheduling algorithms and their integration in the development platform is an important step that will allow the migration to occur and be evaluated properly. Several publications have proposed mixed-criticality scheduling algorithms, such as ~\parencite{baruah1, fleming1, zhao1, baruah2, lili1}, and a few of them can be implemented and compared. Also, to ensure that all ECUs in the system share the notion of time, a timing protocol such as PTP should be implemented to keep the devices synchronized. This way, even when migrating a task, information on the deadlines should be very accurate.
+Traditionally, critical systems relied on strong spatial and
+temporal partitioning mechanisms in order to isolate workloads
+with different certification requirements. While this approach
+improves safety and predictability, it may also lead to low
+resource utilization and reduced flexibility.
 
-Second, as the migration planning will be adapted from previous work, a few changes are necessary to integrate with the concept of mixed criticality. First, the schedulability analysis that is commonly used for selecting the best task distribution has to be extended to work with criticality levels and the use of a mixed-criticality scheduler. Here, it has to be taken into consideration whether extending and retraining the machine learning models is worth the effort, especially since this idea is still not proven as a solution and the extension with the criticality levels and other relevant information might add complexity to the net. Otherwise, implementing a mathematical schedulability analysis that considers mixed criticality is necessary. A second extension that should be performed in the planning stage is to penalize the migration of higher criticality tasks, as the migration overhead adds an additional risk for the tasks failing.
+Vestal~\cite{vestal2007} introduced one of the most influential
+mixed-criticality models, where tasks are associated with
+different Worst-Case Execution Time (WCET) estimations
+depending on their assurance requirements. Since then,
+multiple scheduling approaches have been proposed to support
+dynamic adaptation and graceful degradation under overload
+conditions.
 
-The next step in the development of this strategy is the execution of the migration, which is the most important part of the implementation, especially considering the necessity to meet strict timing constraints for tasks at the higher end of the criticality spectrum. While the exact approach is yet to be proven as feasible, an idea for higher criticality tasks would be to let them run in a standby state in all or a subset of the total of available ECUs, and only executing it in one ECU, while storing runtime generated data either in a central unit or in a shared memory only accessible to highly critical tasks, in this way only a start/stop signal is sent to the task and the execution can be resumed quickly, also ensuring fail-safety in case the executing device fails. Another addition in this stage should be the introduction of a real-time capable communication protocol. In this sense, it should be possible to bound the migration time for this tasks, ideally in the range of a few milliseconds. These ideas could be faster to execute and allow for less variance in the time, eventually making it possible to perform formal verification, but it would be expensive if tasks at all criticality levels were to run like that, as the resources are utilized inefficiently. This should be acceptable for highly critical tasks, though, since the majority of the tasks would be assigned low to medium criticality levels.
+Modern mixed-criticality systems increasingly explore adaptive
+resource management techniques in order to improve efficiency
+while preserving timing guarantees~\cite{adaptive2023}.
+Recent research has also investigated stronger isolation
+mechanisms and heterogeneous execution models for
+mixed-criticality platforms~\cite{hoornaert2024,tinto2024}.
 
-The strategy for lower criticality tasks would be prone to more flexibility, so that a wider range of tasks can be deployed with a lower impact in terms of resource efficiency, even if this would open the possibility for more erroneous behavior in the tasks. An idea for tasks with the lowest criticality would be the transmission of precompiled task binaries and a snapshot of the execution data every time a task is distributed to an ECU and the usage of a normal TCP/IP protocol over Ethernet. With this strategy, the resource utilization in the devices is made more efficient, but the time spent for the migration is reduced as the communication is slower due to the amount of information exchanged, and also less reliable due to the communication protocol. The exploration of strategies for more criticality levels is yet to be done, but a few ideas are suggested. First, a combination of the two strategies mentioned could be implemented for intermediate criticality levels, such as leaving the tasks running but using a less predictable communication protocol. Another idea is to subdivide each of the criticality levels mentioned and there perform variations of the mentioned strategy. For example, in a system with a certain number of devices and 2 high criticality sublevels, the highest sublevel tasks are kept in standby on all devices, while the rest are only kept in standby in a few of the devices, making sure there is always an ECU ready for the highest criticality and using less resources for the second sublevel. In the case of lower criticality, this could be implemented in the form of giving priority to the migration and transmission of data of tasks at the higher sublevels.
+In distributed cyber-physical systems such as modern
+automotive platforms, mixed-criticality introduces additional
+complexity due to communication delays, distributed resource
+sharing, synchronization constraints, and heterogeneous
+hardware architectures. These systems must simultaneously
+maintain timing guarantees, fault tolerance, and runtime
+adaptability across multiple interconnected nodes.
 
-To achieve the results expected as described in the previous paragraphs, the work is organized as follows. An estimation of the effort for each work package is shown in parenthesis, and the diagram below shows the estimated time line:
+\section{Distributed Real-Time Systems}
+\label{sec:distributed}
 
-\begin{enumerate}
-	\item	Literature research (WP1 - 3 months)
-	
-	First, it is necessary to define well the scope of the research and find relevant related work and tools to base the work upon. This first work package involves a refinement of the structure of the work and the subsequent work packages. To achieve this, a broader literature is to be researched and summarized.
-	
-	\item	Building of the hardware and software system (WP2 - 6 months)
-	
-	Finding a real-time platform that allows the further research of the approach described is the first step in the development. Important features to be fulfilled by the system would be the real-time capabilities, integrating a global clock, a multiple-core platform, the integration of mixed-criticality scheduling and a low latency real-time network. For this purpose, an initial idea is to build upon the platform used before at Fortiss, which consists on UltraScale+ devices running FreeRTOS as operating system, particularly the Ultra96 development boards. However, research will be performed to evaluate other options and the implementation of some features using virtual machines, so that all development does not depend on hardware. Additionally, extensions to the development platform are considered to use the real-time Cortex R5 processor on the devices, in addition to the currently used Cortex A53 processors.
-	
-	\item	Development of use cases and testing scenarios (WP3 - 3 months)
-	
-	An important step in finding the applicability of the developed approach and the evaluation and comparison of the different variations is the development of testing scenarios. This includes the development of tasks at each of the many criticality levels, as well as use cases that put the system under test, such as the failure of a device or the distribution of a higher number of tasks at different criticality levels. Also, inspired by the hardware-in-the-loop setups developed in KIA4SM~\parencite{kia1} and by Delgadillo~\parencite{delgadillo1}, it would be interesting to add such a scenario to test the approach under a simulation with visual feedback.
-	
-	\item	Integration and adaptation of the planning strategy (WP4 - 6 months)
-	
-	This includes finding the right strategy for the planning stage, either supported by machine learning or not. Additionally, this includes the effort spent in adapting and integrating the selected approach with the mixed criticality concept and developing or adapting a central unit to coordinate the task migration.
-	
-	\item	Definition and implementation of the approach for highest criticality (WP5 - 3 months)
-	
-	The implementation of a strategy for migration of tasks with the highest criticality level is the most important part of the execution. This includes ensuring the migration is time-bounded, and also ensuring that it is integrated properly with the mixed-criticality scheduler. The actual migration strategy and the communication protocol are also implemented in this stage.
-	
-	\item	Definition and implementation of the approach for lowest criticality (WP6 - 3 months)
-	
-	Implementing the strategy for the lower criticality would require less focus on the time-bounded properties and rather more on the resource efficiency over longer periods of time. For this reason, finding a simple strategy that would require the least usage of resources is the focus in this part of the work.
+Distributed real-time systems consist of multiple computing
+nodes that cooperate in order to execute time-critical tasks
+while communicating over a network infrastructure. Such
+systems are commonly used in domains including automotive
+electronics, industrial automation, aerospace systems, and
+large-scale cyber-physical systems.
 
-	\item	Definition and implementation of the strategies for intermediate criticality levels (WP7 - 3 months)
-	
-	While the exact strategy is still unclear, this is the final step in integrating a multiple level mixed-criticality approach in the migration process. This includes researching and finding the proper strategy for a balance at the intermediate levels between resource efficiency and reliability and fast migration.
-	
-	\item	Evaluation of the results and improvements on the work (WP8 - 6 months)
-	
-	This part of the work is the one that will allow to evaluate the contributions made in the research and the variations explored. This evaluation will allow for a comparison with related work to show the validity of the developments and the strategies used. This evaluation shall include timing measurements, as well as other performance metrics related to resource efficiency. Also, the evaluation shall be based on the verification for the higher criticality levels. Depending on the results for each part of the work, this involves also a refinement of the implementation to achieve more relevant results.
-	
-	\item Writing (WP9 - 3 months)
-	
-	Consolidation of all the work performed, as well as the results obtained, in the PhD dissertation. 
-\end{enumerate}
+Modern automotive systems increasingly evolve from
+domain-oriented architectures composed of numerous ECUs
+towards centralized and zonal architectures based on
+high-performance computing platforms~\cite{sdv2024,
+	automotivehpc2023}. This transition is motivated by the
+growing computational requirements of software-defined
+functionalities, autonomous driving systems, and advanced
+driver assistance systems.
 
+Distributed architectures provide several advantages,
+including scalability, fault tolerance, workload
+distribution, and resource sharing. However, they also
+introduce challenges associated with synchronization,
+communication latency, scheduling coordination, and
+distributed resource management.
 
+\subsection{Heterogeneous and Edge Computing Platforms}
 
+Modern distributed embedded systems frequently combine
+heterogeneous computing resources including CPUs, GPUs,
+FPGAs, and specialized accelerators. Such heterogeneous
+platforms can improve performance and energy efficiency but
+also increase system complexity and scheduling challenges.
 
-	
+The emergence of edge and Multi-access Edge Computing (MEC)
+architectures additionally enables the distribution of tasks
+between embedded devices, edge servers, and cloud
+infrastructure. This paradigm supports workload offloading,
+adaptive deployment, and resource elasticity while reducing
+latency compared to centralized cloud computing approaches.
 
+Task offloading and workload distribution mechanisms are
+closely related to orchestration concepts commonly used in
+cloud and Internet-of-Things (IoT) environments. In such
+systems, orchestration mechanisms coordinate deployment,
+resource allocation, monitoring, and execution management
+across multiple distributed nodes.
+
+\subsection{Task Migration and Runtime Adaptation}
+
+Task migration refers to the process of transferring a task
+or workload from one execution node to another during system
+operation. Migration mechanisms may be used for fault
+tolerance, load balancing, resource optimization, energy
+management, or adaptive scheduling purposes.
+
+Existing migration approaches range from static failover
+mechanisms to fully dynamic runtime migration strategies.
+However, implementing migration in real-time systems
+introduces several challenges, including state transfer,
+synchronization overhead, migration latency, and timing
+predictability~\cite{chen2012,megel2010}.
+
+In heterogeneous distributed systems, migration becomes even
+more complex due to architectural differences between
+hardware platforms, communication constraints, and execution
+environment compatibility.
+
+\section{Networks and Communication in Real-Time Systems}
+\label{sec:networks}
+
+Communication networks represent a critical component of
+distributed cyber-physical systems. In real-time systems,
+communication mechanisms must provide deterministic behavior,
+bounded latency, synchronization support, and fault tolerance.
+
+Traditional automotive systems relied heavily on fieldbus
+technologies such as Controller Area Network (CAN),
+FlexRay, and Local Interconnect Network (LIN). More recent
+architectures increasingly incorporate Ethernet-based
+technologies and Time-Sensitive Networking (TSN) mechanisms
+in order to support higher bandwidth requirements and
+improved scalability.
+
+TSN extends standard Ethernet with mechanisms for traffic
+prioritization, time synchronization, bounded latency, and
+deterministic communication. These capabilities are
+especially relevant for distributed real-time systems where
+tasks executing on different nodes require predictable
+communication behavior.
+
+In distributed task migration and orchestration scenarios,
+network infrastructure additionally plays an important role
+in state transfer, coordination, synchronization, and runtime
+monitoring. Communication latency and bandwidth limitations
+can significantly influence migration overhead and overall
+system schedulability.
+
+\section{Summary}
+
+This chapter introduced the fundamental concepts relevant to
+the research presented in this dissertation, including
+real-time systems, mixed-criticality scheduling, distributed
+embedded architectures, task migration, and communication
+networks for cyber-physical systems.
+
+The presented concepts establish the theoretical foundation
+required for understanding the state of the art and the
+research challenges discussed in the following chapter.
+
+\chapter{Related Work and State of the Art}
+\label{chap:relatedwork}
+
+The increasing complexity of modern embedded and cyber-physical
+systems has led to extensive research on architectures that
+combine deterministic timing guarantees with flexibility and
+runtime adaptability. Classical real-time systems were designed
+under static assumptions regarding task sets, execution platforms,
+and scheduling policies. However, modern automotive and
+distributed embedded systems increasingly require dynamic
+adaptation to workload variations, heterogeneous hardware, and
+runtime reconfiguration.
+
+This chapter reviews the most relevant areas of research related
+to this dissertation, including real-time scheduling, mixed-
+criticality systems, distributed embedded architectures, task
+migration, and adaptive resource management.
+
+% ============================================================
+\section{Scheduling and Resource Management in Real-Time Systems}
+
+Real-time systems require that computational tasks not only
+produce correct results, but also meet strict timing constraints.
+Foundational work in real-time scheduling established classical
+models for periodic task systems and provided schedulability
+conditions for fixed-priority and dynamic-priority scheduling
+algorithms~\cite{liu1973,buttazzo2011}.
+
+Rate Monotonic (RM) and Earliest Deadline First (EDF) scheduling
+remain fundamental paradigms for real-time task scheduling.
+However, their applicability becomes limited in multicore and
+distributed environments due to migration costs, shared resource
+contention, and timing unpredictability.
+
+\subsection{Multiprocessor and Distributed Scheduling}
+
+Multiprocessor real-time scheduling introduces additional
+challenges such as task migration overhead, cache effects,
+and synchronization costs. Megel et al.\ investigated
+migration-aware scheduling strategies aimed at minimizing
+preemption and migration overhead in multiprocessor systems
+~\cite{megel2010}. However, their work remains primarily
+theoretical and does not address runtime distributed execution
+across heterogeneous nodes.
+
+Recent research trends highlight that scheduling decisions
+can no longer be considered independently from communication
+systems, particularly in distributed embedded systems where
+network latency is part of end-to-end timing guarantees.
+
+% ============================================================
+\section{Mixed-Criticality Systems}
+
+Mixed-criticality systems (MCS) enable the execution of tasks
+with different safety and timing requirements on shared platforms.
+This paradigm is widely used in automotive and avionics domains
+where safety-critical and non-critical workloads coexist.
+
+The foundational model by Vestal introduced multiple WCET
+assumptions depending on certification levels, enabling more
+flexible scheduling strategies~\cite{vestal2007}. Since then,
+extensive research has focused on improving schedulability
+analysis and runtime behavior.
+
+Burns and Davis provide a comprehensive survey of mixed-criticality
+systems and highlight the trade-off between resource utilization
+and timing guarantees~\cite{burns2017}. Traditional approaches
+typically rely on mode-switching mechanisms, where low-criticality
+tasks are degraded or dropped under overload conditions.
+
+Recent work explores more adaptive strategies, including energy-
+aware and multicore-aware scheduling approaches~\cite{mcsEnergySurvey2022}.
+However, most approaches still assume static task allocation and
+do not support runtime migration across distributed systems.
+
+% ============================================================
+\section{Distributed Real-Time Systems and Automotive Architectures}
+
+Distributed real-time systems consist of multiple computational
+nodes connected via a communication network. These systems are
+widely used in automotive, aerospace, and industrial automation.
+
+Modern automotive architectures are transitioning from distributed
+Electronic Control Unit (ECU)-based systems towards centralized
+and zonal architectures. This transition is driven by increasing
+computational demands from advanced driver assistance systems
+and autonomous driving functionalities~\cite{baunach2018}.
+
+Recent developments in software-defined vehicles (SDVs) and
+centralized automotive computing platforms further accelerate
+this transformation~\cite{sdvSurvey2024}. These architectures
+aim to consolidate computation onto high-performance platforms
+while maintaining real-time guarantees.
+
+At the same time, Time-Sensitive Networking (TSN) has emerged
+as a key enabling technology for deterministic communication in
+Ethernet-based systems. TSN introduces mechanisms such as the
+Time-Aware Shaper (TAS), which enables time-triggered scheduling
+of network traffic.
+
+A comprehensive survey of TSN scheduling mechanisms is provided
+by Stüber et al.~\cite{tsnSurvey2023}, while more recent work
+investigates experimental evaluations of TSN scheduling approaches
+in industrial scenarios~\cite{tsnRtas2024}.
+
+Despite these advances, most distributed real-time architectures
+still rely on static task allocation, where execution placement
+is determined offline and remains unchanged during runtime.
+
+\section{Task Offloading and Orchestration in IoT and Edge Systems}
+
+In parallel to research on distributed real-time systems, a large
+body of work in the Internet of Things (IoT), edge computing, and
+fog computing has investigated the problem of task offloading and
+resource orchestration across heterogeneous computing nodes.
+
+In IoT and edge environments, resource-constrained devices often
+lack sufficient computational capacity to execute complex workloads
+locally. To address this limitation, task offloading mechanisms
+transfer computation to more capable edge or cloud resources,
+reducing execution latency, energy consumption, or improving
+system scalability.
+
+Mao et al.\ studied computation offloading strategies in mobile
+edge computing systems and highlighted the trade-off between
+communication cost, computation latency, and energy consumption
+\cite{mao2017mobile}. Their work shows that optimal offloading
+decisions depend on dynamic system conditions such as network
+load and device state.
+
+Similarly, You et al.\ analyzed joint communication and computation
+resource allocation for mobile edge systems, demonstrating that
+offloading decisions must consider both network and compute
+constraints simultaneously \cite{you2017energy}.
+
+Recent research in fog and edge computing has extended these ideas
+towards multi-node orchestration frameworks, where workloads are
+dynamically distributed across hierarchical computing layers
+(edge, fog, cloud). These systems often rely on centralized or
+semi-centralized orchestration components that continuously
+optimize task placement based on system state information.
+
+Shi et al.\ provide a comprehensive survey of edge computing
+architectures and highlight orchestration as a key challenge for
+scalable IoT systems \cite{shi2016edge}.
+
+More recent studies emphasize the use of container orchestration
+frameworks and serverless computing models to dynamically manage
+task placement in distributed environments. However, these systems
+are typically designed for best-effort execution environments and
+do not provide hard real-time guarantees.
+
+While IoT and edge computing research provides powerful models for
+dynamic task offloading and system-wide orchestration, most existing
+approaches assume relaxed timing constraints and prioritize
+throughput, energy efficiency, or cost optimization.
+
+In contrast, real-time embedded systems require deterministic timing
+guarantees, bounded execution latency, and predictable scheduling
+behavior. This fundamental difference limits the direct applicability
+of IoT offloading techniques to safety-critical real-time systems.
+
+Nevertheless, the conceptual overlap between task offloading in IoT
+systems and task migration in distributed real-time systems provides
+an important foundation for this dissertation. Both domains address
+the problem of dynamically assigning computational tasks to
+distributed resources under changing system conditions, albeit with
+different constraints and objectives.
+
+% ============================================================
+\section{Task Migration in Real-Time Systems}
+
+Task migration has been widely studied as a mechanism to improve
+load balancing, fault tolerance, and resource utilization in
+real-time systems. However, it introduces significant challenges
+related to timing predictability, communication overhead, and
+state consistency.
+
+Migration-aware scheduling approaches primarily aim at reducing
+migration overhead while preserving schedulability guarantees.
+Megel et al.\ demonstrated the cost sensitivity of migration in
+multiprocessor scheduling~\cite{megel2010}.
+
+In fault-tolerant systems, migration is often used for recovery
+purposes. Chen and Lyu proposed a FlexRay-based framework in which
+backup ECUs take over execution in case of failure~\cite{chen2012}.
+However, such approaches operate at coarse granularity (ECU level)
+and do not support fine-grained task migration between active nodes.
+
+Recent research in TSN and distributed systems highlights that
+dynamic routing and scheduling are tightly coupled problems,
+further increasing the complexity of runtime adaptation
+~\cite{tsnSchedAnalysis2024}.
+
+Overall, most existing approaches either focus on theoretical
+scheduling models or coarse-grained fault recovery mechanisms,
+with limited support for runtime task migration in heterogeneous
+distributed systems.
+
+% ============================================================
+\section{Machine Learning for Scheduling and Deployment}
+
+Machine learning techniques have been increasingly applied to
+scheduling and resource allocation problems due to their ability
+to approximate complex optimization problems.
+
+Early work explored neural network approaches for schedulability
+analysis and real-time scheduling prediction~\cite{cardeira1994,dominguez2004}.
+These approaches primarily focused on offline system design.
+
+More recent research investigates learning-based approaches for
+resource allocation in dynamic systems. In particular, reinforcement
+learning has been applied to distributed scheduling and routing
+problems, especially in TSN and edge environments.
+
+However, despite promising results, most machine learning-based
+approaches remain limited to simulation or offline optimization
+and are not integrated into real-time operating systems with
+strict deterministic guarantees.
+
+% ============================================================
+\section{Existing Architectures and Frameworks}
+
+Several research projects have investigated architectures for
+adaptive deployment and distributed execution in automotive systems.
+
+The KIA4SM project proposed a cooperative integration architecture
+for future smart mobility systems, enabling task migration across
+heterogeneous automotive platforms and introducing checkpoint-restore
+mechanisms~\cite{eckl2015}.
+
+While such architectures demonstrate the feasibility of distributed
+execution, they remain primarily conceptual or prototype-level
+systems without full integration into real-time operating systems
+supporting fine-grained runtime migration.
+
+Recent research in virtualization and partitioning further explores
+isolation mechanisms for mixed-criticality systems, but these
+approaches typically assume static deployment models and do not
+support dynamic task relocation.
+
+% ============================================================
+\section{Research Gap}
+
+The reviewed literature shows significant progress in real-time
+scheduling, mixed-criticality systems, distributed architectures,
+and task migration. However, important limitations remain.
+
+Most existing approaches treat scheduling, communication, and
+deployment as separate concerns. Real-time systems typically rely
+on static task allocation, while mixed-criticality systems focus on
+controlled degradation rather than runtime adaptation. Distributed
+architectures improve scalability but lack fine-grained dynamic
+reconfiguration capabilities.
+
+Task migration is generally addressed either in theoretical models
+or coarse-grained fault-tolerant systems. Machine learning approaches
+provide promising optimization capabilities but are rarely integrated
+into safety-critical real-time execution environments.
+
+Consequently, there is a lack of integrated system-level architectures
+capable of supporting fine-grained runtime task migration across
+distributed heterogeneous mixed-criticality systems while preserving
+strict timing guarantees.
+
+This dissertation addresses this gap by proposing a distributed
+real-time operating system architecture enabling adaptive task
+migration across heterogeneous execution platforms.
+
+%\begin{tikzpicture}[scale=1.1]
+%	
+%	% Axes
+%	\draw[->, thick] (0,0) -- (10,0) node[right] {Adaptability};
+%	\draw[->, thick] (0,0) -- (0,8) node[above] {System Scope};
+%	
+%	% Axis labels
+%	\node at (2,-0.7) {Static};
+%	\node at (8,-0.7) {Dynamic};
+%	
+%	\node[rotate=90] at (-0.8,2) {Single Node};
+%	\node[rotate=90] at (-0.8,6.5) {Distributed};
+%	
+%	% Regions / Categories
+%	
+%	% Static RT Systems
+%	\node[draw, fill=gray!20, rounded corners] at (2,1.5) {
+%		\small Static RT Systems
+%	};
+%	
+%	% Mixed-Criticality Systems
+%	\node[draw, fill=blue!20, rounded corners] at (3.5,2.5) {
+%		\small Mixed-Criticality
+%	};
+%	
+%	% Distributed Static Systems
+%	\node[draw, fill=green!20, rounded corners] at (3,5.5) {
+%		\small Distributed RT\\(Static Mapping)
+%	};
+%	
+%	% Migration / Adaptive Systems
+%	\node[draw, fill=orange!20, rounded corners] at (7,5) {
+%		\small Migration-Based\\Approaches
+%	};
+%	
+%	% Emerging Adaptive Systems
+%	\node[draw, fill=yellow!30, rounded corners] at (7.5,6.5) {
+%		\small Adaptive Distributed\\Systems
+%	};
+%	
+%	% Your Contribution
+%	\node[draw, fill=red!30, thick, rounded corners] at (8.5,7.2) {
+%		\small \textbf{Your Approach}\\
+%		\small (Dynamic MC Migration)
+%	};
+%	
+%	% Optional arrows (evolution)
+%	\draw[->, dashed] (2,1.5) -- (3.5,2.5);
+%	\draw[->, dashed] (3.5,2.5) -- (3,5.5);
+%	\draw[->, dashed] (3,5.5) -- (7,5);
+%	\draw[->, dashed] (7,5) -- (8.5,7.2);
+%	
+%\end{tikzpicture}

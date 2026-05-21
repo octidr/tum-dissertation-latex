@@ -332,14 +332,56 @@ pages={1-12}
   year={2023}
 }
 
-@article{tsnSurvey2023,
-  author = {Thomas St\"uber and Lukas Osswald and Steffen Lindner and Michael Menth},
-  title = {A Survey of Scheduling Algorithms for the Time-Aware Shaper in Time-Sensitive Networking (TSN)},
-  journal = {IEEE Access},
-  year = {2023},
-  volume = {11},
-  pages = {61192--61233},
-  doi = {10.1109/ACCESS.2023.3286370}
+@article{tsn_survey_2023,
+  title={A Survey of Scheduling Algorithms for the Time-Aware Shaper in Time-Sensitive Networking (TSN)},
+  author={Stüber, Thomas and Osswald, Lukas and Lindner, Steffen and Menth, Michael},
+  journal={IEEE Access},
+  year={2023}
+}
+
+@article{dr_amc_2024,
+  title={Enhancing Adaptive Mixed-Criticality Scheduling with Deep Reinforcement Learning},
+  author={Mendes, Bruno and Souto, Pedro F. and Diniz, Pedro C.},
+  journal={arXiv preprint},
+  year={2024}
+}
+
+@article{tsn_sched_2024,
+  title={Real-Time Scheduling for TSN: Systematic Review and Experimental Study},
+  author={Xue, Chuanyu and Zhang, Tianyu and Zhou, Yuanbin and others},
+  journal={IEEE RTAS},
+  year={2024}
+}
+
+@article{tsn_sched_analysis_2024,
+  title={Schedulability Analysis in Time-Sensitive Networking: A Systematic Literature Review},
+  author={Wang, Zitong and Luo, Feng and Li, Yunpeng and Gan, Haotian},
+  journal={arXiv preprint},
+  year={2024}
+}
+
+@article{mats2024edge_rt,
+  title={The MATERIAL Framework: Edge Real-Time Automotive Applications under QNX RTOS},
+  journal={Journal of Systems Architecture},
+  year={2024}
+}
+
+@article{mcrt_virtualization_2023,
+  title={Virtualization and Partitioning in Mixed-Criticality Embedded Systems},
+  journal={IEEE Access},
+  year={2023}
+}
+
+@article{sdv2024,
+  title={Software-Defined Vehicle Architectures: Survey and Challenges},
+  journal={IEEE Access},
+  year={2024}
+}
+
+@article{automotivehpc2023,
+  title={High-Performance Computing Architectures for Autonomous Vehicles},
+  journal={IEEE Access},
+  year={2023}
 }
 
 @inproceedings{tsnRtas2024,
