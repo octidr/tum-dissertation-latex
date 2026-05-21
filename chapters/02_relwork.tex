@@ -11,7 +11,6 @@ algorithms, and real-time operating systems. Afterwards, the
 concept of mixed-criticality systems is introduced together
 with the challenges associated with resource sharing and
 adaptability in modern embedded platforms.
-
 Subsequently, distributed real-time systems and modern
 automotive computing architectures are analyzed, including
 heterogeneous systems, edge computing, and task offloading
@@ -19,6 +18,7 @@ concepts. Finally, the chapter presents the networking
 technologies and communication mechanisms commonly used in
 distributed cyber-physical systems with real-time requirements.
 
+% ============================================================
 \section{Real-Time Systems}
 \label{sec:rtsystems}
 
@@ -28,14 +28,33 @@ results, but also on the time at which these results are
 generated~\cite{buttazzo2011}. In such systems, timing
 constraints are treated as first-class requirements and must
 be satisfied in order to guarantee correct system behavior.
-
 Real-time systems are commonly classified into hard real-time,
 firm real-time, and soft real-time systems depending on the
 consequences of missing timing deadlines. In hard real-time
 systems, missing a deadline may lead to catastrophic failures,
-making deterministic timing guarantees essential. Soft
-real-time systems, on the other hand, can tolerate occasional
-deadline misses with degraded quality of service.
+making deterministic timing guarantees essential. Firm
+real-time systems occupy an intermediate position: a missed
+deadline renders the result valueless, but unlike hard
+real-time systems, individual misses do not necessarily
+trigger a system failure. Soft real-time systems, on the other
+hand, can tolerate occasional deadline misses with graceful
+degradation of quality of service.
+
+Each task in a real-time system is typically characterized by
+a set of parameters: its release time (or arrival time), an
+execution time, a relative deadline, and---for periodic
+tasks---a period. The Worst-Case Execution Time~(WCET) is a
+particularly critical parameter, as it represents an upper
+bound on the time a task may require under any input and
+execution condition. Deriving tight and safe WCET estimates
+is a research challenge in its own right, with techniques
+ranging from static analysis~\cite{wilhelm2008} to
+measurement-based approaches~\cite{engblom2002}. The
+inherent trade-off between safety (overestimation) and
+efficiency (tight bounds) is especially pronounced in
+heterogeneous and many-core platforms, where cache effects,
+pipeline speculation, and memory contention increase
+analysis complexity.
 
 Modern cyber-physical systems such as automotive platforms,
 industrial controllers, robotics systems, and autonomous
@@ -45,7 +64,9 @@ adaptability~\cite{baunach2018,sdv2024}. This combination
 introduces significant challenges for system design and
 resource management.
 
+% ------------------------------------------------------------
 \subsection{Scheduling Theory}
+\label{subsec:scheduling}
 
 Scheduling is one of the core concepts in real-time systems
 and refers to the process of determining the execution order
@@ -59,16 +80,44 @@ Liu and Layland~\cite{liu1973} introduced one of the
 foundational scheduling models for periodic real-time tasks,
 establishing schedulability bounds for RM and EDF scheduling.
 EDF scheduling is particularly relevant due to its optimality
-properties for uniprocessor systems under specific assumptions.
+properties for uniprocessor systems under specific assumptions:
+it is known to be optimal in the sense that if any algorithm
+can schedule a task set on a single processor, EDF can also
+schedule it. Fixed-priority schemes such as RM, while not
+theoretically optimal, offer simpler analysis and more
+predictable behavior in the presence of task interactions,
+making them dominant in practice.
+
+Schedulability analysis is the formal process of determining
+whether a task set will always meet its deadlines under a
+given scheduling policy. Response Time Analysis~(RTA) for
+fixed-priority systems~\cite{joseph1986} and utilization-based
+bounds for EDF~\cite{liu1973} are well-established analytical
+tools. However, extending such analyses to account for
+blocking from shared resources, interrupt handling, and
+inter-task communication requires additional models such as
+the Sporadic Server or the Stack Resource Policy~\cite{baker1991}.
 
 As modern embedded systems evolved towards multicore and
 heterogeneous architectures, scheduling approaches also became
 more complex. Multiprocessor scheduling introduces additional
 challenges including task migration overhead, synchronization,
 resource sharing, cache interference, and communication
-latency~\cite{megel2010}.
+latency~\cite{megel2010}. Broadly, multiprocessor scheduling
+strategies are classified into partitioned, global, and
+semi-partitioned (or clustered) approaches. Partitioned
+scheduling assigns each task permanently to one processor and
+applies uniprocessor analysis independently, at the cost of
+possible inefficiency due to bin-packing constraints. Global
+scheduling allows tasks to migrate freely across processors,
+improving utilization but introducing runtime migration
+overhead and making formal analysis significantly harder.
+Semi-partitioned and cluster-based approaches attempt to
+balance these trade-offs~\cite{davis2011}.
 
+% ------------------------------------------------------------
 \subsection{Real-Time Operating Systems}
+\label{subsec:rtos}
 
 Real-Time Operating Systems (RTOSs) provide the software
 infrastructure required for executing time-critical tasks
@@ -82,19 +131,39 @@ inter-process communication, synchronization primitives,
 interrupt handling, and memory management. Depending on the
 system requirements, RTOSs may support static scheduling,
 dynamic scheduling, partitioning, or mixed-criticality
-execution models.
+execution models. Well-known examples include
+OSEK/VDX~\cite{osek2005} and AUTOSAR Classic Platform, which
+are widely deployed in automotive embedded systems, as well as
+more general-purpose RTOSs such as FreeRTOS and VxWorks.
+
+The AUTOSAR Adaptive Platform~\cite{autosar2023} represents a
+more recent development targeted at high-performance
+automotive computing nodes. Unlike the Classic Platform, which
+is oriented towards microcontrollers with static task
+configurations, the Adaptive Platform supports dynamic
+application deployment, service-oriented communication, and
+POSIX-compliant execution environments---all while maintaining
+defined timing and isolation guarantees. This architectural
+shift is particularly relevant for the integration of
+mixed-criticality workloads and dynamic task management in
+modern vehicle platforms.
 
 In distributed and heterogeneous systems, RTOSs additionally
 play an important role in enabling communication, coordination,
 and resource sharing between different hardware nodes. The
 ability to support runtime adaptation and dynamic task
 migration increasingly represents an important requirement for
-modern distributed embedded systems.
+modern distributed embedded systems. Hypervisor-based
+virtualization is increasingly used to consolidate multiple
+RTOS instances or mixed-criticality partitions on a single
+hardware platform~\cite{heiser2020}, providing spatial and
+temporal isolation with lower hardware costs.
 
+% ============================================================
 \section{Mixed-Criticality Systems}
 \label{sec:mcs}
 
-Mixed-criticality systems (MCS) are systems in which
+Mixed-criticality systems~(MCS) are systems in which
 applications with different levels of criticality coexist on
 shared hardware resources~\cite{vestal2007,burns2017}. Such
 systems are especially relevant in domains including
@@ -111,17 +180,86 @@ resource utilization and reduced flexibility.
 Vestal~\cite{vestal2007} introduced one of the most influential
 mixed-criticality models, where tasks are associated with
 different Worst-Case Execution Time (WCET) estimations
-depending on their assurance requirements. Since then,
-multiple scheduling approaches have been proposed to support
-dynamic adaptation and graceful degradation under overload
-conditions.
+depending on their assurance level. Specifically, a
+high-criticality task carries a pessimistic (safe) WCET
+estimate for use under high-assurance conditions, and a
+more optimistic estimate for use when the system operates
+in a nominal low-load mode. Since then, multiple scheduling
+approaches have been proposed to support dynamic adaptation
+and graceful degradation under overload conditions. The
+mixed-criticality model of Baruah et al.~\cite{baruah2011}
+extended Vestal's original formulation to a formal
+schedulability framework under EDF, providing a foundation
+for a significant body of subsequent research.
+
+% ------------------------------------------------------------
+\subsection{Criticality Levels and Standards}
+\label{subsec:criticality_standards}
+
+In safety-critical domains, criticality levels are often
+defined by domain-specific standards. In avionics, the
+DO-178C standard defines Design Assurance Levels (DALs)
+A through E for software, where DAL~A represents the
+highest assurance requirement for functions whose failure
+could cause catastrophic consequences~\cite{do178c2011}. The
+corresponding hardware standard DO-254 applies analogous
+levels to electronic hardware design. In automotive systems,
+ISO~26262 defines Automotive Safety Integrity Levels
+(ASILs) ranging from ASIL~A to ASIL~D, with ASIL~D
+representing the most stringent requirements for functions
+whose failure could lead to severe injuries or
+fatalities~\cite{iso26262_2018}. For general functional
+safety across industrial domains, IEC~61508 defines Safety
+Integrity Levels (SILs) 1 through 4.
+
+These standards impose requirements not only on the software
+algorithms themselves but also on the processes, tools,
+verification methods, and evidence used during development.
+When components of different criticality share hardware
+resources, demonstrating compliance becomes significantly
+more complex, as the behavior of lower-criticality components
+may potentially interfere with higher-criticality ones.
+Achieving compositionality---the ability to verify system
+properties from verified component properties---is a central
+challenge in the design of mixed-criticality platforms.
+
+% ------------------------------------------------------------
+\subsection{Scheduling and Resource Management for MCS}
+\label{subsec:mcs_scheduling}
 
 Modern mixed-criticality systems increasingly explore adaptive
 resource management techniques in order to improve efficiency
 while preserving timing guarantees~\cite{adaptive2023}.
+In the standard mixed-criticality scheduling model, the
+system can transition between a low-criticality (LO) mode
+and a high-criticality (HI) mode. When the observed execution
+time of a high-criticality task exceeds its LO-mode WCET
+estimate, the system switches to HI mode, abandoning or
+reducing the service of low-criticality tasks in order to
+guarantee that all high-criticality deadlines are met.
+
+Several extensions to this basic model have been proposed.
+The AMC (Adaptive Mixed Criticality) scheduler~\cite{burns2013}
+uses per-task mode switching rather than a global transition,
+allowing finer-grained adaptation. Elastic scheduling
+approaches attempt to dynamically adjust task parameters
+(periods, execution budgets) in response to load changes
+while maintaining feasibility constraints. Research on
+\emph{service degradation} policies addresses the question of
+how best to reduce the service of lower-criticality tasks
+during overload, recognizing that an abrupt shutdown of
+lower-criticality functions may itself introduce safety risks.
+
 Recent research has also investigated stronger isolation
 mechanisms and heterogeneous execution models for
 mixed-criticality platforms~\cite{hoornaert2024,tinto2024}.
+Cache coloring and cache partitioning have emerged as
+important mechanisms for reducing cache interference between
+tasks of different criticality levels executing on shared-cache
+multicore platforms~\cite{mancuso2013}. Memory bandwidth
+regulation and the use of memory protection units~(MPUs) or
+memory management units~(MMUs) further contribute to
+spatial isolation guarantees.
 
 In distributed cyber-physical systems such as modern
 automotive platforms, mixed-criticality introduces additional
@@ -129,8 +267,12 @@ complexity due to communication delays, distributed resource
 sharing, synchronization constraints, and heterogeneous
 hardware architectures. These systems must simultaneously
 maintain timing guarantees, fault tolerance, and runtime
-adaptability across multiple interconnected nodes.
+adaptability across multiple interconnected nodes. The
+integration of mixed-criticality scheduling with distributed
+resource management and task migration constitutes a central
+open challenge addressed in this dissertation.
 
+% ============================================================
 \section{Distributed Real-Time Systems}
 \label{sec:distributed}
 
@@ -139,16 +281,28 @@ nodes that cooperate in order to execute time-critical tasks
 while communicating over a network infrastructure. Such
 systems are commonly used in domains including automotive
 electronics, industrial automation, aerospace systems, and
-large-scale cyber-physical systems.
+large-scale cyber-physical systems. In contrast to
+uniprocessor or shared-memory multiprocessor systems,
+distributed systems must cope with the inherent uncertainty
+of network communication, including variable transmission
+delays, packet losses, and clock synchronization errors,
+all while satisfying end-to-end timing constraints.
 
 Modern automotive systems increasingly evolve from
-domain-oriented architectures composed of numerous ECUs
-towards centralized and zonal architectures based on
-high-performance computing platforms~\cite{sdv2024,
-	automotivehpc2023}. This transition is motivated by the
-growing computational requirements of software-defined
-functionalities, autonomous driving systems, and advanced
-driver assistance systems.
+domain-oriented architectures composed of numerous Electronic
+Control Units~(ECUs) towards centralized and zonal
+architectures based on high-performance computing
+platforms~\cite{sdv2024,automotivehpc2023}. This transition
+is motivated by the growing computational requirements of
+software-defined functionalities, autonomous driving systems,
+and advanced driver assistance systems~(ADAS). A zonal
+architecture groups ECUs by physical location in the vehicle
+rather than by function, with high-bandwidth Ethernet backbones
+connecting zone controllers to central compute nodes. This
+consolidation reduces wiring complexity and weight while
+enabling more powerful centralized processing, but also
+concentrates risk and demands stronger mechanisms for
+isolation and fault containment.
 
 Distributed architectures provide several advantages,
 including scalability, fault tolerance, workload
@@ -157,29 +311,79 @@ introduce challenges associated with synchronization,
 communication latency, scheduling coordination, and
 distributed resource management.
 
+% ------------------------------------------------------------
+\subsection{End-to-End Timing Analysis}
+\label{subsec:e2e}
+
+A fundamental challenge in distributed real-time systems is
+the analysis of end-to-end latency for processing chains
+that span multiple nodes. A \emph{cause-effect chain} (or
+task chain) is a sequence of tasks executing on potentially
+different nodes, where each task consumes the output of the
+previous one. The end-to-end latency of such a chain is
+determined not only by the execution times of individual
+tasks, but also by their activation patterns, scheduling
+decisions on each node, and the communication delays
+incurred at each link.
+
+The problem of bounding end-to-end latency has been studied
+through several analytical frameworks. The work of
+Dürr et al.~\cite{durr2019} provides a systematic
+characterization of end-to-end latency semantics,
+distinguishing between \emph{reaction time} (the worst-case
+delay from an external event to the completion of the last
+task in the chain) and \emph{data age} (the maximum
+staleness of data observed by the final consumer). These
+two metrics capture different aspects of real-time
+correctness relevant to different application domains;
+for example, control systems are typically more sensitive to
+data age, whereas event-triggered safety responses demand
+short reaction times.
+
+% ------------------------------------------------------------
 \subsection{Heterogeneous and Edge Computing Platforms}
+\label{subsec:hetero_edge}
 
 Modern distributed embedded systems frequently combine
 heterogeneous computing resources including CPUs, GPUs,
 FPGAs, and specialized accelerators. Such heterogeneous
 platforms can improve performance and energy efficiency but
 also increase system complexity and scheduling challenges.
+The diversity of instruction set architectures, memory
+hierarchies, and programming models across these processing
+elements means that tasks cannot in general be freely
+migrated without adaptation of the application binary or
+execution environment.
 
-The emergence of edge and Multi-access Edge Computing (MEC)
+The emergence of edge and Multi-access Edge Computing~(MEC)
 architectures additionally enables the distribution of tasks
 between embedded devices, edge servers, and cloud
-infrastructure. This paradigm supports workload offloading,
-adaptive deployment, and resource elasticity while reducing
-latency compared to centralized cloud computing approaches.
+infrastructure~\cite{mec2017}. This paradigm supports
+workload offloading, adaptive deployment, and resource
+elasticity while reducing latency compared to centralized
+cloud computing approaches. In latency-sensitive
+cyber-physical applications, edge computing plays a
+particularly important role by enabling local processing
+of sensor data with sub-millisecond response times that
+would be infeasible with round-trips to a remote cloud.
 
 Task offloading and workload distribution mechanisms are
 closely related to orchestration concepts commonly used in
 cloud and Internet-of-Things (IoT) environments. In such
 systems, orchestration mechanisms coordinate deployment,
 resource allocation, monitoring, and execution management
-across multiple distributed nodes.
+across multiple distributed nodes. Container-based
+virtualization and lightweight orchestration frameworks,
+originally developed for cloud-native applications, are
+increasingly being adapted for edge and embedded
+contexts~\cite{morabito2018}, though the real-time and
+safety guarantees required in cyber-physical systems
+impose constraints that are not natively addressed by
+mainstream cloud orchestration tools.
 
+% ------------------------------------------------------------
 \subsection{Task Migration and Runtime Adaptation}
+\label{subsec:taskmig}
 
 Task migration refers to the process of transferring a task
 or workload from one execution node to another during system
@@ -192,13 +396,44 @@ mechanisms to fully dynamic runtime migration strategies.
 However, implementing migration in real-time systems
 introduces several challenges, including state transfer,
 synchronization overhead, migration latency, and timing
-predictability~\cite{chen2012,megel2010}.
+predictability~\cite{chen2012,megel2010}. The migration
+process itself can be decomposed into several phases:
+(i)~the \emph{pre-migration} phase, in which the source
+node prepares and serializes the task state; (ii)~the
+\emph{transfer} phase, during which state data is
+transmitted to the destination node over the interconnect;
+and (iii)~the \emph{post-migration} phase, in which the
+destination node initializes execution from the transferred
+state. Each of these phases introduces latency that must
+be accounted for in the schedulability analysis of the
+migrating task as well as of any tasks that share resources
+with it.
+
+Checkpoint-based migration approaches periodically save
+a task's execution state to stable storage or shared memory,
+enabling resumption from the most recent checkpoint after
+a failure or migration event~\cite{elnozahy2002}. While
+this reduces the cost of the transfer phase by transmitting
+incremental state differences, it introduces regular runtime
+overhead for checkpointing and may not be compatible with
+hard real-time timing guarantees unless the checkpointing
+overhead is explicitly bounded and included in schedulability
+analysis.
 
 In heterogeneous distributed systems, migration becomes even
-more complex due to architectural differences between
-hardware platforms, communication constraints, and execution
-environment compatibility.
+more complex due to architectural differences between hardware
+platforms, communication constraints, and execution
+environment compatibility. Binary incompatibility between
+different instruction set architectures requires either
+maintaining multiple compiled variants of each migratable
+task, recompilation at migration time, or the use of
+intermediate representations or virtual machines that
+abstract the underlying hardware. The overhead introduced
+by such compatibility layers must be carefully evaluated
+against the latency and correctness requirements of the
+target application.
 
+% ============================================================
 \section{Networks and Communication in Real-Time Systems}
 \label{sec:networks}
 
@@ -208,38 +443,114 @@ communication mechanisms must provide deterministic behavior,
 bounded latency, synchronization support, and fault tolerance.
 
 Traditional automotive systems relied heavily on fieldbus
-technologies such as Controller Area Network (CAN),
-FlexRay, and Local Interconnect Network (LIN). More recent
-architectures increasingly incorporate Ethernet-based
-technologies and Time-Sensitive Networking (TSN) mechanisms
-in order to support higher bandwidth requirements and
-improved scalability.
+technologies such as Controller Area Network~(CAN),
+FlexRay, and Local Interconnect Network~(LIN). CAN provides
+a broadcast, message-priority-based medium access scheme
+with well-understood worst-case latency bounds, but its
+bandwidth is limited to 1~Mbit/s (or up to 8~Mbit/s with
+CAN~FD). FlexRay offers higher bandwidth and a time-triggered
+communication model that provides stronger temporal
+determinism, but at higher cost and complexity. LIN is used
+for low-bandwidth sensor and actuator networks where cost
+is paramount. These technologies collectively supported the
+domain-oriented ECU architectures of previous vehicle
+generations.
 
-TSN extends standard Ethernet with mechanisms for traffic
-prioritization, time synchronization, bounded latency, and
-deterministic communication. These capabilities are
-especially relevant for distributed real-time systems where
-tasks executing on different nodes require predictable
-communication behavior.
+% ------------------------------------------------------------
+\subsection{Time-Sensitive Networking}
+\label{subsec:tsn}
+
+More recent architectures increasingly incorporate
+Ethernet-based technologies and Time-Sensitive Networking~(TSN)
+mechanisms in order to support higher bandwidth requirements
+and improved scalability~\cite{ieee8021q2022}. TSN extends
+standard IEEE~802.3 Ethernet with a suite of standards
+developed by the IEEE~802.1 working group, collectively
+providing mechanisms for traffic prioritization, time
+synchronization, bounded latency, and deterministic
+communication.
+
+Key TSN standards include IEEE~802.1AS for generalized
+precision time protocol~(gPTP)-based clock
+synchronization~\cite{ieee8021as2020}, IEEE~802.1Qbv for
+time-aware shaping~(TAS), and IEEE~802.1Qbu/802.3br for
+frame preemption, which allows high-priority frames to
+interrupt the transmission of lower-priority frames. The
+Credit-Based Shaper~(CBS) defined in IEEE~802.1Qav provides
+bandwidth reservation for audio-video bridging~(AVB) streams.
+Together, these mechanisms allow TSN networks to support
+multiple traffic classes with heterogeneous latency and
+bandwidth requirements on a shared infrastructure.
+
+TSN capabilities are especially relevant for distributed
+real-time systems where tasks executing on different nodes
+require predictable communication behavior. In the context
+of task migration, TSN networks can provide bounded-latency
+channels for state transfer, coordination messages, and
+monitoring traffic, enabling more predictable migration
+latency bounds than best-effort networks. However, the
+interaction between TSN traffic scheduling, task scheduling
+on computing nodes, and the timing constraints of
+distributed applications remains an active area of
+research~\cite{craciunas2016}.
+
+% ------------------------------------------------------------
+\subsection{Service-Oriented Communication and Middleware}
+\label{subsec:middleware}
+
+In addition to transport-layer networking technologies, the
+communication middleware used in distributed real-time
+systems plays a significant role in system integration and
+runtime behavior. The AUTOSAR Adaptive Platform adopts a
+service-oriented communication model based on the SOME/IP
+protocol~\cite{autosar2023}, which supports dynamic service
+discovery and method-call semantics over standard IP
+networks. The Data Distribution Service~(DDS) middleware
+standard~\cite{omgdds2015} provides a publish-subscribe
+communication model with Quality-of-Service~(QoS) policies
+governing reliability, latency budgets, deadlines, and
+resource limits, and has seen growing adoption in
+autonomous and robotic systems through its use as the
+underlying transport in the Robot Operating System~2
+(ROS2)~\cite{maruyama2016}.
 
 In distributed task migration and orchestration scenarios,
 network infrastructure additionally plays an important role
 in state transfer, coordination, synchronization, and runtime
 monitoring. Communication latency and bandwidth limitations
 can significantly influence migration overhead and overall
-system schedulability.
+system schedulability. The co-design of communication
+scheduling policies and task scheduling policies for
+distributed real-time systems with migration support
+constitutes one of the open research problems motivating
+the work presented in this dissertation.
 
+% ============================================================
 \section{Summary}
+\label{sec:background_summary}
 
 This chapter introduced the fundamental concepts relevant to
-the research presented in this dissertation, including
-real-time systems, mixed-criticality scheduling, distributed
-embedded architectures, task migration, and communication
-networks for cyber-physical systems.
+the research presented in this dissertation. Starting from
+the foundations of real-time systems, scheduling theory,
+and operating systems support, the discussion progressed to
+mixed-criticality models and their associated challenges in
+resource sharing, mode management, and safety certification.
+The chapter then addressed distributed real-time system
+architectures, covering end-to-end timing analysis, the
+automotive evolution towards centralized and zonal platforms,
+heterogeneous and edge computing paradigms, and the specific
+challenges of task migration in real-time contexts. Finally,
+relevant communication technologies---from legacy fieldbuses
+to TSN and service-oriented middleware---were reviewed.
 
-The presented concepts establish the theoretical foundation
-required for understanding the state of the art and the
-research challenges discussed in the following chapter.
+The presented concepts collectively establish the theoretical
+foundation required for understanding the state of the art
+and the research challenges discussed in the following
+chapter. In particular, the intersecting requirements of
+mixed-criticality scheduling, distributed resource management,
+and deterministic communication under task migration scenarios
+motivate the design space explored in the remainder of this
+dissertation.
 
 \chapter{Related Work and State of the Art}
 \label{chap:relatedwork}

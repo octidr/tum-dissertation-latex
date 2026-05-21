@@ -2,50 +2,255 @@
 % Add the above to each chapter to make compiling the PDF easier in some editors.
 
 \chapter{Introduction}\label{chap:introduction}
+% ============================================================
+\section{Motivation}
+\label{sec:motivation}
 
-**** FIX BIBLIOGRAPHY, not loading for some reason *****
+The automotive industry is undergoing a fundamental transformation driven by the
+growing role of software and electronics in vehicle design and innovation. Industry
+analyses consistently report that the majority of automotive innovation today originates
+in electronic systems rather than in mechanical or materials engineering~\cite{ey1},
+and that spending on automotive software and electronics is projected to account for
+nearly half of the total vehicle bill of materials in premium vehicles by the end of
+this decade~\cite{pwc1}. Vehicle electrification, autonomous driving, advanced driver
+assistance systems~(ADAS), and vehicle-to-everything~(V2X) connectivity are only some
+of the domains where onboard computing has become central to product differentiation
+and safety.
 
-Trends in the automotive industry are shaping the future of cars in a way that electronic and computing devices are becoming increasingly important. In fact, the majority of innovations in the automotive sector are related to electronic systems, either in the form of hardware or software~\parencite{ey1}. Developments such as vehicle electrification, autonomous driving and vehicle connectivity are only some examples of automotive applications where computer processing has a big relevance~\parencite{pwc1}. It is therefore reasonable to seek for approaches to ensure their usage is efficient and safety requirements are met.
+A modern high-end vehicle contains upward of 100 Electronic Control Units~(ECUs)
+connected by several kilometers of wiring harness, contributing significantly to
+vehicle weight and manufacturing cost~\cite{vipin2,baunach1}. Historically, ECUs
+have been designed with a single-purpose philosophy: each unit is dedicated to one
+functional domain in order to avoid interference between tasks and to simplify safety
+certification~\cite{vipin1,vipin2}. While this approach provides clear isolation and
+predictable behavior, it has well-known structural shortcomings. Many tasks are only
+active during specific and rare operating conditions, leading to chronic
+underutilization of processing resources across the fleet. A failure of any single ECU
+with no fallback mechanism can also compromise the functions it hosts. The combined
+effect is a system that is simultaneously over-provisioned in hardware and fragile in
+fault tolerance.
 
-In modern cars, dozens of computers, commonly known as electronic control units (ECUs), execute the various computing tasks present in a car. This number is likely to increase if we consider past trends: as the tasks performed by ECUs often have safety-critical constraints, such as real-time capabilities, they are commonly integrated to serve a specific purpose, avoiding conflicts caused by the parallel execution of other tasks~\parencite{vipin1, vipin2}. However, this strategy has shortcomings in the form of inefficient usage of the electronic devices (many tasks are only executed in specific and rare situations), reduced fault tolerance if a system fails, and increased weight and cost of the vehicle due to the high number of ECUs and cables~\parencite{vipin2, baunach1}. Hence, it is an important topic in the automotive industry to find solutions for these issues, especially optimizing costs, while ensuring vehicle safety is kept~\parencite{mckinsey1}.
+These inefficiencies have motivated a broader industry transition toward \emph{ECU
+	consolidation}: redistributing workloads from many single-purpose units to a smaller
+number of high-performance, multi-purpose computing platforms~\cite{mckinsey1}. The
+emerging software-defined vehicle~(SDV) concept extends this further, treating vehicle
+functions as software services that can be deployed, updated, and redistributed across
+a flexible hardware architecture at runtime~\cite{sdv2024}. Under this paradigm, the
+static binding between a function and a specific ECU is relaxed, and the ability to
+dynamically distribute and redistribute tasks at runtime becomes a key enabler of both
+resource efficiency and fault tolerance.
 
-ECU consolidation is an approach for the reduction in the number of electronic devices in the car. The idea is to consolidate the execution of the tasks from many single-purpose ECUs to a few powerful, multi-purpose ECUs. However, the implementation of ECU consolidation raises other challenges: as more tasks need to be executed on the same platform, higher computation and safety requirements must be met. Regarding safety, it is important to consider the added complexity, and cases where a hardware or software failure occur need to be considered, since a single failure could block many tasks and cause major issues. Also, some safety-critical tasks require redundancy to ensure their correct execution~\parencite{mundhenk1}. These challenges have motivated previous research at the chair of operating systems of the Technical University of Munich, where research on projects such as KIA4SM and MaLSAMi has explored the concept of dynamic task migration as a process where the execution of any tasks could move at any given time from one ECU to another. This would allow tasks to finish execution in case an ECU is overloaded or stops working, effectively allowing them to finish executing and meet their real-time constraints.
+Achieving this vision, however, requires solving a problem that sits at the
+intersection of two fields that have historically developed largely independently:
+\emph{mixed-criticality systems} and \emph{real-time task migration}. This tension
+is the central intellectual challenge of this dissertation, and it is worth stating
+explicitly from the outset.
 
-Previous work at the chair has divided the task migration process in two stages: planning and execution. The planning is the stage which generates a task distribution to the devices that will execute them. The execution is then responsible for allowing tasks to migrate from one device to another, while ensuring their progress is not lost and the execution continues and finishes correctly at the target device. So far, the work performed at the chair has explored the approach with a single criticality level, using different priority strategies for scheduling the tasks on an ECU (that is, deciding which task should get the processor and be executed at a given time). While this idea is in itself an important contribution, it is relevant to note that in many safety-critical embedded applications, such as the aerospace and automotive industries, different criticality levels exist, which are often defined in standards such as the ISO 26262, which defines the ASIL (automotive safety integrity level). For example, in a car, the correct functioning of the ABS is highly critical, as a failure could be fatal. In contrast, the functionality of the radio system has a lower criticality, as an eventual failure would not cause any issue other than an unpleasant trip. This idea is also important because in these industries there exist certification agencies that validate a system before it can be distributed.
+Mixed-criticality~(MC) systems research is fundamentally concerned with
+\emph{predictability and static assurance}: given a set of tasks with heterogeneous
+safety requirements---expressed through standards such as ISO~26262 Automotive Safety
+Integrity Levels~(ASILs)~\cite{iso26262_2018}---how can a platform guarantee that
+high-criticality tasks always meet their deadlines, even under worst-case conditions,
+while also providing useful service to lower-criticality workloads? The entire
+analytical apparatus of mixed-criticality scheduling, from Vestal's foundational
+model~\cite{vestal2007} to more recent adaptive approaches~\cite{burns2017}, is built
+on the assumption that task parameters are known and fixed at design time, and that
+the platform topology does not change during execution.
 
-For this reason, and due to the relevance of the concept of mixed-criticality in many industries, it would be important to expand the research on task migration to explore its integration. In particular, expanding the execution stage to ensure tasks with higher criticality are always able to execute properly and meet their deadline is crucial. But also it is important to find a balance between resource efficiency and reliability of the migration process for different criticality levels. Therefore, the work proposed as part of this PhD program aims to implement a strategy for the migration execution at different levels of criticality. Additionally, the mixed-criticality concept has to be integrated as well into the planning stage. This will be also explored in the scope of this research, although the main focus will be in the execution stage.
+Dynamic task migration, by contrast, is inherently disruptive to this assumption.
+Migration transfers an executing task from one node to another, necessarily
+interrupting its execution, serializing its state, transmitting that state over a
+network, and resuming execution in a different environment. Each of these steps
+introduces latency, consumes resources on both the source and destination node, and
+temporarily violates the static assumptions on which schedulability guarantees are
+built. In a system with hard real-time constraints---where a braking control
+function failing its deadline can have fatal consequences---this disruption must be
+managed with extreme care.
 
-Furthermore, another important trend is the integration of edge technologies (known as multiaccess edge cloud or mobile edge computing - MEC - or in the specific automotive use-case vehicular edge cloud - VEC- ) for augmenting the vehicle's capabilities in aspects such as communication with other traffic participants or information services, increased sensing capabilities, offloading of tasks, etc (add reference). In the scope of this dissertation, it is considered that edge computing resources can be used to provide a further execution possibility for non-critical tasks under 2 circumstances: 1) the task would benefit from the availability of more powerful computing resources and sensing inputs, and 2) the physical hardware is at a critically high task load level and low criticality tasks would otherwise starve. It is considered that for the most highly critical tasks (like the ones interacting directly with the control of actuators like steering or vehicle speed) this approach is not feasible, as communication with an external component is always prone to interruption, even with the low latencies provided by new communication technologies such as 6G or 5G (add ref).
+Reconciling these two requirements is non-trivial. It is not sufficient to apply
+existing MC scheduling on each node independently and treat migration as a separate
+layer: the act of migration changes the task set on each node, triggering mode
+transitions, modifying resource availability, and potentially invalidating
+schedulability guarantees that were valid before the migration event. Conversely,
+existing real-time migration approaches do not account for criticality-differentiated
+treatment of tasks, providing no mechanism to prioritize the migration of safety-critical
+functions over best-effort ones when resources are constrained. The intersection of
+these two fields, particularly in the context of ECU consolidation for automotive
+systems, represents a largely unexplored area in the published literature, and
+constitutes the primary motivation for this dissertation.
 
-Although the work performed as part of this research is based on previous developments at the chair and will likely extend existent tools, it includes the development of a platform that implements mixed-criticality scheduling, as well as a migration system that involves the concept in different areas in the planning and execution stages. This includes the selection of hardware and software, as well as network interfaces. Also, verification of the algorithms used will be performed to ensure safety and timing requirements are met.
+% ============================================================
+\section{Problem Statement}
+\label{sec:problem}
 
-\section*{Research Questions}
-To better define the scope and goal of the research performed in this thesis, following research questions have been propsed as basis (*** Maybe remove and integrate better into Intro text****):
+Prior research at the Chair of Operating Systems of the Technical University of
+Munich~(TUM), conducted within projects including KIA4SM, MaLSAMi, and HaCRoM, has
+established foundational approaches to task migration in real-time distributed systems.
+This includes checkpoint-based migration execution mechanisms and machine-learning-based
+migration planning tools capable of runtime schedulability prediction~\cite{taieb1,
+	utz1,blieninger1}. These contributions form the direct technical basis on which this
+dissertation builds. However, they share a critical limitation: they operate at a
+single, undifferentiated criticality level. All tasks are treated equivalently with
+respect to scheduling priority and migration policy, and no mechanism exists to
+guarantee that high-criticality tasks are privileged during resource contention or
+migration events.
 
-\begin{itemize}
-	\item 1. To what extent is task migration feasible in such a distributed real-time system while respecting real-time constraints, and under what conditions?
-	\item 2. Given the system's need to handle uncertainty and adapt to changes in hardware availability and task load, how should tasks be prioritized based on criticality? 
-	\item 3. What migration approaches - both at communication level and at OS level - are most suitable for high- and low-criticality tasks considering a trade-off between minimizing downtime and optimizing resources?
-	\item 4. How feasible is extending the system by offloading tasks to virtual edge resources? What are the implications of this approach, especially in terms of latency, response time, safety and resource optimization?
-\end{itemize}
+This limitation becomes untenable in the context of ECU consolidation for
+safety-critical automotive systems. When an ASIL-D braking function and a
+non-safety-relevant navigation application share the same computing platform and
+the same migration infrastructure, they must be treated fundamentally differently.
+ISO~26262 mandates that the behavior of safety-critical functions be guaranteed and
+verifiable under all relevant operating conditions~\cite{iso26262_2018}; a migration
+mechanism that might delay or interrupt such a function in the same way as a
+low-criticality task is not compliant with this requirement.
 
----- See how to integrate into text but:
-Following chapters / aspects help find an answer to the research questions:
-Q 1: ...
-Q 2: Approach, Base OS
-Q 3: Migration,  
-Q 4: Base OS, Results
+Three concrete open problems define the scope of this dissertation. First, the base
+execution platform must be extended to support mixed-criticality scheduling, providing
+the runtime separation of concerns required for correct MC behavior before any migration
+mechanism is layered on top. Second, differentiated migration strategies must be
+designed for tasks at different criticality levels, each with appropriate timing
+guarantees, state preservation mechanisms, and resource overhead characteristics.
+The fundamental challenge here is that high-criticality migration must be fast,
+bounded, and formally analyzable, while low-criticality migration may trade immediacy
+for efficiency. Third, the interaction between migration events and the MC scheduler
+on each node must be carefully accounted for: a task arriving at a destination ECU
+mid-execution has different schedulability implications than a task present since
+system startup, and the platform design must handle this correctly.
 
-\section*{Related Work}\label{section:relatedwork}
-At the chair, previous research projects, such as KIA4SM and MaLSAMi, have explored the possibility of migrating tasks running on a device to another in a real-time capable system (for example, ECUs in a vehicle) under certain conditions. As mentioned before, in these works, the migration was divided into two main stages: The first is the migration planning, which determines the hardware that tasks will be migrated to, should the original hardware not be able to fulfill its duty (for example, if there is a failure in that hardware or if the real-time constraints or deadlines would be violated). The second is the execution of the migration, which ensures that corresponding tasks can be migrated from the source device to the target device while keeping their current state.
+A secondary problem concerns the role of edge computing resources in this architecture.
+Vehicular edge cloud~(VEC) and Mobile Edge Computing~(MEC) infrastructures place
+compute capacity in proximity to the vehicle, offering supplementary processing
+resources with latencies that may be acceptable for non-safety-critical workloads.
+Whether and how such resources can be incorporated as a third tier in a
+criticality-stratified migration hierarchy---and what formal conditions bound their
+safe use---is an exploratory research question this dissertation investigates.
 
-The migration execution has been explored previously at the chair, for example in projects KIA4SM and HaCRoM. This was explored in the form of a real-time checkpoint-restore mechanism. This involves creating and storing a snapshot of running tasks in a shared memory or copying the memory from a device to another. The work is based on Fiasco.OC and Genode OS. 
+% ============================================================
+\section{Research Questions}
+\label{sec:researchquestions}
 
-MaLSAMi and subsequent theses analyzed migration planning, with researchers performing schedulability analysis based on machine learning (specifically, on neural networks). Machine learning was picked over traditional mathematical approaches such as the ones proposed by Buttazzo~\parencite{buttazzo1}, because the recurrent calculations can become too complex for complex tasks and for big task sets, and they often lead to a pessimistic calculation of the system utilization. By predicting the feasibility of a task set using machine learning algorithms, potentially faster but less precise results are obtained, as demonstrated by previous theses by Taieb~\parencite{taieb1}, Utz~\parencite{utz1} and Blieninger~\parencite{blieninger1}. The predictions provided by the machine-learning approach indicate whether a task set is 100\% schedulable or not, but they are not completely safe, since false positive predictions may occur. This approach could be a potentially powerful solution for enabling the execution at run-time of the real-time capable migration planning. 
+Based on the problem statement above, this dissertation is guided by the following
+research questions:
 
-Additionally, a few different platforms and setups have been explored in these projects. The used operating systems running on the ECUs are Genode OS, as used in MaLSAMi and a few theses, a real-time operating system based on an extension of Genode OS with Fiasco.OC, as used in KIA4SM~\parencite{kia1} and HaCRoM, and FreeRTOS, as used by Delgadillo~\parencite{delgadillo1}. These developments are considered in the selection of the platform.
+\begin{enumerate}
+	\item[\textbf{RQ1.}] To what extent is task migration feasible in a distributed
+	real-time embedded system while respecting real-time constraints, and under what
+	conditions can timing guarantees be preserved across a migration event?
+	
+	\item[\textbf{RQ2.}] How should tasks be prioritized and scheduled based on their
+	criticality level in a system that must adapt dynamically to hardware failures and
+	varying task load, and how can mixed-criticality scheduling be integrated with a
+	runtime migration execution layer?
+	
+	\item[\textbf{RQ3.}] What migration strategies---at both the operating system and
+	communication levels---are most suitable for high- and low-criticality tasks,
+	considering the trade-off between minimizing migration latency and optimizing
+	resource utilization?
+	
+	\item[\textbf{RQ4.}] Under what conditions is it feasible to offload tasks to
+	virtual edge resources as part of a criticality-stratified migration hierarchy,
+	and what are the implications with respect to latency, schedulability, safety
+	assurance, and resource efficiency?
+\end{enumerate}
 
-These projects have achieved research-relevant results in their segments, but the concept of mixed-criticality has not been explored in related chair internal work. It is therefore necessary to look at relevant chair-external work. In particular, those regarding mixed-criticality scheduling strategies and related to task migration are reviewed next.
+% ============================================================
+\section{Research Methodology}
+\label{sec:methodology}
 
-It is worth noting that to my knowledge, research on mixed-criticality task migration of high criticality tasks, especially applied to the idea of ECU consolidation, has not been published. A possible reason for the lack of research in this area is the fact that nowadays safety is valued much higher than resource efficiency, thus overseeing the potential for optimization in this aspect. However, in my opinion, it should be possible to achieve both goals by implementing a holistic strategy and therefore it is an area where research can contribute importantly.
+This dissertation follows a design-science research methodology, proceeding through
+three stages: system design, prototypical implementation on real hardware, and
+empirical evaluation.
 
+The first stage is \emph{system design}. The architecture of the mixed-criticality
+base platform, the guest task model, and the differentiated migration strategies are
+developed through iterative design informed by the requirements of the target domain.
+Design decisions are driven by the constraints of embedded ECU-class hardware---limited
+memory, deterministic scheduling requirements, and the isolation demands imposed by
+ISO~26262---rather than by theoretical optimality criteria alone.
+
+The second stage is \emph{prototypical implementation}. The designed platform is
+realized as a working system on embedded hardware, integrating the Axcan OS
+mixed-criticality scheduler, an ELF-based guest task loading mechanism, checkpoint
+and state transfer support, and a communication infrastructure based on PTP time
+synchronization and SOME/IP. This prototype serves as the primary artifact through
+which the design is evaluated.
+
+The third stage is \emph{empirical evaluation}. The implemented system is evaluated
+through proof-of-concept demonstrations and direct measurement on the target hardware.
+Initial results characterize the task loading latency achievable on embedded nodes
+and on virtualized edge nodes respectively, establishing an empirical baseline for
+assessing migration feasibility across criticality tiers. Further timing and
+schedulability measurements are planned as the platform matures. The emphasis
+throughout is on grounding claims in observed system behavior on real hardware,
+rather than in simulation or purely analytical bounds.
+
+% ============================================================
+\section{Contributions}
+\label{sec:contributions}
+
+This dissertation makes the following original contributions to the state of the art
+in mixed-criticality real-time systems and distributed embedded computing:
+
+\begin{enumerate}
+	
+	\item \textbf{Mixed-criticality integration into a distributed real-time embedded
+		platform.} The FreeRTOS-based ESFREE platform is extended to support
+	mixed-criticality scheduling with an Asymmetric Multiprocessing~(AMP) execution
+	model on multicore ECU hardware. This provides the foundational runtime separation
+	of criticality levels required for all subsequent contributions.
+	
+	\item \textbf{Guest task architecture and ELF-based migration support.} A portable
+	guest task architecture is defined in the form of a C library and a simplified
+	linker script, enabling tasks to be compiled as self-describing ELF binaries that
+	can be loaded and relocated at runtime on a target ECU. The architecture integrates
+	checkpoint support and PTP-synchronized timing to preserve task progress and timing
+	context across migration events.
+	
+	\item \textbf{Criticality-differentiated migration strategies.} Three migration
+	strategies are defined and implemented, each targeting a distinct criticality tier.
+	The high-criticality~(HI) strategy provides a fast, formally bounded migration path
+	with timing guarantees sufficient for ASIL-class tasks. The low-criticality~(LO)
+	strategy employs a checkpoint-restore mechanism that prioritizes continuity of
+	progress while minimizing interference with co-hosted high-criticality tasks. The
+	Virtual ECU strategy defines the conditions and mechanisms under which
+	non-safety-critical tasks may be offloaded to edge computing resources, and
+	characterizes the associated latency and reliability constraints.
+	
+	\item \textbf{Empirical characterization of task loading latency across execution
+		tiers.} Initial measurements on the target hardware establish the task loading
+	latency achievable by the Axcan OS ELF loading mechanism on embedded nodes, and
+	the additional overhead introduced by containerization on virtualized edge nodes.
+	These results provide a concrete empirical baseline for assessing the feasibility
+	and overhead of migration across the different criticality tiers, and motivate the
+	design choices made in the differentiated migration strategies.
+	
+	\item \textbf{Mixed-criticality-aware adaptation of an ML-based migration planning
+		toolchain.} The machine-learning-based schedulability prediction tools developed
+	in prior theses~\cite{taieb1,utz1,blieninger1} are adapted to embedded ECU-class
+	hardware and extended to incorporate mixed-criticality task parameters, enabling
+	MC-aware runtime migration planning.
+	
+\end{enumerate}
+
+% ============================================================
+\section{Dissertation Structure}
+\label{sec:structure}
+
+The remainder of this dissertation is organized as follows.
+
+**** TODO: Update this with correct references to chapters, keeping this structure as placeholder
+
+Chapter~\ref{chap:background} introduces the fundamental concepts in real-time systems,
+mixed-criticality scheduling, distributed embedded architectures, task migration, and
+communication technologies for cyber-physical systems.
+Chapter~3 surveys the state of the art relevant to each research question and
+identifies the open problems addressed by this work.
+Chapter~4 presents the system architecture and design, including the mixed-criticality
+base platform, guest task model, and migration infrastructure.
+Chapter~5 describes the three criticality-differentiated migration strategies in detail,
+including their design rationale, implementation, and initial empirical characterization.
+Chapter~6 presents the empirical evaluation, including schedulability analysis results,
+migration latency measurements, and proof-of-concept demonstrations on the target
+hardware platform.
+Chapter~7 concludes the dissertation, summarizes the contributions with respect to the
+research questions, and identifies directions for future work.
