@@ -76,9 +76,111 @@ fixed-priority scheduling algorithms such as Rate Monotonic
 (RM), as well as dynamic-priority approaches such as
 Earliest-Deadline-First (EDF).
 
+\begin{figure}
+	\begin{center}
+		\subfloat[Rate-Monotonic Scheduler] {
+			\begin{ganttchart}[
+				vgrid,
+				hgrid,
+				expand chart=0.8\textwidth
+				]{1}{35}
+				\gantttitle{Time in ms}{35} \\
+				%\gantttitlelist{10,20,...,200}{1} \\
+				\ganttbar[bar/.append style={fill=TUMBlue}]{T1}{1}{2}
+				\ganttbar[bar/.append style={fill=TUMSecondaryBlue}]{}{6}{7}
+				\ganttbar[bar/.append style={fill=TUMBlue}]{}{11}{12} 
+				\ganttbar[bar/.append style={fill=TUMSecondaryBlue}]{}{16}{17} 
+				\ganttbar[bar/.append style={fill=TUMBlue}]{}{21}{22}
+				\ganttbar[bar/.append style={fill=TUMSecondaryBlue}]{}{26}{27} 
+				\ganttbar[bar/.append style={fill=TUMBlue}]{}{31}{32}
+				\ganttbar[bar/.append style={draw=TUMAccentOrange, fill=TUMAccentOrange}, bar left shift=0.96, bar right shift = 0.03, bar top shift = 0.1, bar height = 0.8] {} {0}{0} 
+				\ganttbar[bar/.append style={draw=TUMAccentOrange, fill=TUMAccentOrange}, bar left shift=0.96, bar right shift = 0.03, bar top shift = 0.1, bar height = 0.8] {} {5}{5}
+				\ganttbar[bar/.append style={draw=TUMAccentOrange, fill=TUMAccentOrange}, bar left shift=0.96, bar right shift = 0.03, bar top shift = 0.1, bar height = 0.8] {} {10}{10}
+				\ganttbar[bar/.append style={draw=TUMAccentOrange, fill=TUMAccentOrange}, bar left shift=0.96, bar right shift = 0.03, bar top shift = 0.1, bar height = 0.8] {} {15}{15}
+				\ganttbar[bar/.append style={draw=TUMAccentOrange, fill=TUMAccentOrange}, bar left shift=0.96, bar right shift = 0.03, bar top shift = 0.1, bar height = 0.8] {} {20}{20}
+				\ganttbar[bar/.append style={draw=TUMAccentOrange, fill=TUMAccentOrange}, bar left shift=0.96, bar right shift = 0.03, bar top shift = 0.1, bar height = 0.8] {} {25}{25}
+				\ganttbar[bar/.append style={draw=TUMAccentOrange, fill=TUMAccentOrange}, bar left shift=0.96, bar right shift = 0.03, bar top shift = 0.1, bar height = 0.8] {} {30}{30}
+				\ganttbar[bar/.append style={draw=TUMAccentOrange, fill=TUMAccentOrange}, bar left shift=0.96, bar right shift = 0.03, bar top shift = 0.1, bar height = 0.8] {} {35}{35} \\
+				\ganttbar[bar/.append style={fill=TUMAccentBlue}]{T2}{3}{5}
+				\ganttbar[bar/.append style={fill=TUMAccentBlue}]{T2}{8}{8}
+				\ganttbar[bar/.append style={fill=TUMAccentLightBlue}]{T2}{9}{10}
+				\ganttbar[bar/.append style={fill=TUMAccentLightBlue}]{T2}{13}{14}
+				\ganttbar[bar/.append style={fill=TUMAccentBlue}]{T2}{15}{15}
+				\ganttbar[bar/.append style={fill=TUMAccentBlue}]{T2}{18}{20}
+				\ganttbar[bar/.append style={fill=TUMAccentLightBlue}]{T2}{23}{25}
+				\ganttbar[bar/.append style={fill=TUMAccentLightBlue}]{T2}{28}{28}
+				\ganttbar[bar/.append style={fill=TUMAccentBlue}]{T2}{29}{30}
+				\ganttbar[bar/.append style={fill=TUMAccentBlue}]{T2}{33}{34}
+				\ganttbar[bar/.append style={draw=TUMAccentOrange, fill=TUMAccentOrange}, bar left shift=0.96, bar right shift = 0.03, bar top shift = 0.1, bar height = 0.8] {} {0}{0} 
+				\ganttbar[bar/.append style={draw=TUMAccentOrange, fill=TUMAccentOrange}, bar left shift=0.96, bar right shift = 0.03, bar top shift = 0.1, bar height = 0.8] {} {7}{7}
+				\ganttbar[bar/.append style={draw=TUMAccentOrange, fill=TUMAccentOrange}, bar left shift=0.96, bar right shift = 0.03, bar top shift = 0.1, bar height = 0.8] {} {14}{14}
+				\ganttbar[bar/.append style={draw=TUMAccentOrange, fill=TUMAccentOrange}, bar left shift=0.96, bar right shift = 0.03, bar top shift = 0.1, bar height = 0.8] {} {21}{21}
+				\ganttbar[bar/.append style={draw=TUMAccentOrange, fill=TUMAccentOrange}, bar left shift=0.96, bar right shift = 0.03, bar top shift = 0.1, bar height = 0.8] {} {28}{28}
+				\ganttbar[bar/.append style={draw=TUMAccentOrange, fill=TUMAccentOrange}, bar left shift=0.96, bar right shift = 0.03, bar top shift = 0.1, bar height = 0.8] {} {35}{35}
+				\ganttvrule[vrule/.append style={thin}]{0}{0}
+				\ganttvrule[vrule/.append style={thin}]{5}{5}
+				\ganttvrule[vrule/.append style={thin}]{10}{10}
+				\ganttvrule[vrule/.append style={thin}]{15}{15}
+				\ganttvrule[vrule/.append style={thin}]{20}{20}
+				\ganttvrule[vrule/.append style={thin}]{25}{25}
+				\ganttvrule[vrule/.append style={thin}]{30}{30}
+				\ganttvrule[vrule/.append style={thin}]{35}{35}
+			\end{ganttchart}
+		}
+		
+		\subfloat[EDF Scheduler] {
+			\begin{ganttchart}[
+				vgrid,
+				hgrid,
+				expand chart=0.8\textwidth
+				]{1}{35}
+				\gantttitle{Time in ms}{35} \\
+				%\gantttitlelist{10,20,...,200}{1} \\
+				\ganttbar[bar/.append style={fill=TUMBlue}]{T1}{1}{2}
+				\ganttbar[bar/.append style={fill=TUMSecondaryBlue}]{}{7}{8}
+				\ganttbar[bar/.append style={fill=TUMBlue}]{}{13}{14} 
+				\ganttbar[bar/.append style={fill=TUMSecondaryBlue}]{}{16}{17} 
+				\ganttbar[bar/.append style={fill=TUMBlue}]{}{21}{22}
+				\ganttbar[bar/.append style={fill=TUMSecondaryBlue}]{}{27}{28} 
+				\ganttbar[bar/.append style={fill=TUMBlue}]{}{31}{32}
+				\ganttbar[bar/.append style={draw=TUMAccentOrange, fill=TUMAccentOrange}, bar left shift=0.96, bar right shift = 0.03, bar top shift = 0.1, bar height = 0.8] {} {0}{0} 
+				\ganttbar[bar/.append style={draw=TUMAccentOrange, fill=TUMAccentOrange}, bar left shift=0.96, bar right shift = 0.03, bar top shift = 0.1, bar height = 0.8] {} {5}{5}
+				\ganttbar[bar/.append style={draw=TUMAccentOrange, fill=TUMAccentOrange}, bar left shift=0.96, bar right shift = 0.03, bar top shift = 0.1, bar height = 0.8] {} {10}{10}
+				\ganttbar[bar/.append style={draw=TUMAccentOrange, fill=TUMAccentOrange}, bar left shift=0.96, bar right shift = 0.03, bar top shift = 0.1, bar height = 0.8] {} {15}{15}
+				\ganttbar[bar/.append style={draw=TUMAccentOrange, fill=TUMAccentOrange}, bar left shift=0.96, bar right shift = 0.03, bar top shift = 0.1, bar height = 0.8] {} {20}{20}
+				\ganttbar[bar/.append style={draw=TUMAccentOrange, fill=TUMAccentOrange}, bar left shift=0.96, bar right shift = 0.03, bar top shift = 0.1, bar height = 0.8] {} {25}{25}
+				\ganttbar[bar/.append style={draw=TUMAccentOrange, fill=TUMAccentOrange}, bar left shift=0.96, bar right shift = 0.03, bar top shift = 0.1, bar height = 0.8] {} {30}{30}
+				\ganttbar[bar/.append style={draw=TUMAccentOrange, fill=TUMAccentOrange}, bar left shift=0.96, bar right shift = 0.03, bar top shift = 0.1, bar height = 0.8] {} {35}{35} \\
+				\ganttbar[bar/.append style={fill=TUMAccentBlue}]{T2}{3}{6}
+				\ganttbar[bar/.append style={fill=TUMAccentLightBlue}]{T2}{9}{12}
+				\ganttbar[bar/.append style={fill=TUMAccentBlue}]{T2}{15}{15}
+				\ganttbar[bar/.append style={fill=TUMAccentBlue}]{T2}{18}{20}
+				\ganttbar[bar/.append style={fill=TUMAccentLightBlue}]{T2}{23}{26}
+				\ganttbar[bar/.append style={fill=TUMAccentBlue}]{T2}{29}{30}
+				\ganttbar[bar/.append style={fill=TUMAccentBlue}]{T2}{33}{34}
+				\ganttbar[bar/.append style={draw=TUMAccentOrange, fill=TUMAccentOrange}, bar left shift=0.96, bar right shift = 0.03, bar top shift = 0.1, bar height = 0.8] {} {0}{0} 
+				\ganttbar[bar/.append style={draw=TUMAccentOrange, fill=TUMAccentOrange}, bar left shift=0.96, bar right shift = 0.03, bar top shift = 0.1, bar height = 0.8] {} {7}{7}
+				\ganttbar[bar/.append style={draw=TUMAccentOrange, fill=TUMAccentOrange}, bar left shift=0.96, bar right shift = 0.03, bar top shift = 0.1, bar height = 0.8] {} {14}{14}
+				\ganttbar[bar/.append style={draw=TUMAccentOrange, fill=TUMAccentOrange}, bar left shift=0.96, bar right shift = 0.03, bar top shift = 0.1, bar height = 0.8] {} {21}{21}
+				\ganttbar[bar/.append style={draw=TUMAccentOrange, fill=TUMAccentOrange}, bar left shift=0.96, bar right shift = 0.03, bar top shift = 0.1, bar height = 0.8] {} {28}{28}
+				\ganttbar[bar/.append style={draw=TUMAccentOrange, fill=TUMAccentOrange}, bar left shift=0.96, bar right shift = 0.03, bar top shift = 0.1, bar height = 0.8] {} {35}{35}
+				\ganttvrule[vrule/.append style={thin}]{0}{0}
+				\ganttvrule[vrule/.append style={thin}]{5}{5}
+				\ganttvrule[vrule/.append style={thin}]{10}{10}
+				\ganttvrule[vrule/.append style={thin}]{15}{15}
+				\ganttvrule[vrule/.append style={thin}]{20}{20}
+				\ganttvrule[vrule/.append style={thin}]{25}{25}
+				\ganttvrule[vrule/.append style={thin}]{30}{30}
+				\ganttvrule[vrule/.append style={thin}]{35}{35}
+			\end{ganttchart}
+		}
+	\end{center}
+	\caption{Example of Schedules Generated Using Different Scheduling Policies}\label{fig:schedexample}
+\end{figure}
+
 Liu and Layland~\cite{liu1973} introduced one of the
 foundational scheduling models for periodic real-time tasks,
-establishing schedulability bounds for RM and EDF scheduling.
+establishing schedulability bounds for rate-monotonic (RM) and earliest-deadline-first (EDF) scheduling.
 EDF scheduling is particularly relevant due to its optimality
 properties for uniprocessor systems under specific assumptions:
 it is known to be optimal in the sense that if any algorithm
@@ -86,7 +188,7 @@ can schedule a task set on a single processor, EDF can also
 schedule it. Fixed-priority schemes such as RM, while not
 theoretically optimal, offer simpler analysis and more
 predictable behavior in the presence of task interactions,
-making them dominant in practice.
+making them dominant in practice. A comparison between schedules generated with both RM and EDF policies is shown in Fig. \ref{fig:schedexample}, where we can notice that in many cases, the dynamic policy of EDF is able to find a schedule without missing deadlines, while RM misses deadlines for T2 in job 1.
 
 Schedulability analysis is the formal process of determining
 whether a task set will always meet its deadlines under a
@@ -142,7 +244,7 @@ automotive computing nodes. Unlike the Classic Platform, which
 is oriented towards microcontrollers with static task
 configurations, the Adaptive Platform supports dynamic
 application deployment, service-oriented communication, and
-POSIX-compliant execution environments---all while maintaining
+POSIX-compliant execution environments, all while maintaining
 defined timing and isolation guarantees. This architectural
 shift is particularly relevant for the integration of
 mixed-criticality workloads and dynamic task management in
@@ -219,8 +321,8 @@ When components of different criticality share hardware
 resources, demonstrating compliance becomes significantly
 more complex, as the behavior of lower-criticality components
 may potentially interfere with higher-criticality ones.
-Achieving compositionality---the ability to verify system
-properties from verified component properties---is a central
+Achieving compositionality, i.e. the ability to verify system
+properties from verified component properties, is a central
 challenge in the design of mixed-criticality platforms.
 
 % ------------------------------------------------------------
@@ -540,8 +642,8 @@ architectures, covering end-to-end timing analysis, the
 automotive evolution towards centralized and zonal platforms,
 heterogeneous and edge computing paradigms, and the specific
 challenges of task migration in real-time contexts. Finally,
-relevant communication technologies---from legacy fieldbuses
-to TSN and service-oriented middleware---were reviewed.
+relevant communication technologie, from legacy fieldbuses
+to TSN and service-oriented middleware, were reviewed.
 
 The presented concepts collectively establish the theoretical
 foundation required for understanding the state of the art
@@ -552,274 +654,469 @@ and deterministic communication under task migration scenarios
 motivate the design space explored in the remainder of this
 dissertation.
 
+
 \chapter{Related Work and State of the Art}
 \label{chap:relatedwork}
 
-The increasing complexity of modern embedded and cyber-physical
-systems has led to extensive research on architectures that
-combine deterministic timing guarantees with flexibility and
-runtime adaptability. Classical real-time systems were designed
-under static assumptions regarding task sets, execution platforms,
-and scheduling policies. However, modern automotive and
-distributed embedded systems increasingly require dynamic
-adaptation to workload variations, heterogeneous hardware, and
-runtime reconfiguration.
-
-This chapter reviews the most relevant areas of research related
-to this dissertation, including real-time scheduling, mixed-
-criticality systems, distributed embedded architectures, task
-migration, and adaptive resource management.
+The increasing complexity of modern embedded and cyber-physical systems has led to
+extensive research on architectures that combine deterministic timing guarantees with
+flexibility and runtime adaptability. Classical real-time systems were designed under
+static assumptions regarding task sets, execution platforms, and scheduling policies.
+However, modern automotive and distributed embedded systems increasingly require
+dynamic adaptation to workload variations, heterogeneous hardware, and runtime
+reconfiguration. This chapter reviews the most relevant areas of research related to
+this dissertation, covering real-time scheduling, mixed-criticality systems, distributed
+embedded architectures, task migration, machine learning for scheduling, and prior
+work at the chair. Each section concludes by identifying the specific limitations that
+motivate the contributions of this dissertation.
 
 % ============================================================
 \section{Scheduling and Resource Management in Real-Time Systems}
+\label{sec:rw_scheduling}
 
-Real-time systems require that computational tasks not only
-produce correct results, but also meet strict timing constraints.
-Foundational work in real-time scheduling established classical
-models for periodic task systems and provided schedulability
-conditions for fixed-priority and dynamic-priority scheduling
-algorithms~\cite{liu1973,buttazzo2011}.
+Foundational work in real-time scheduling established classical models for periodic
+task systems and provided schedulability conditions for fixed-priority and
+dynamic-priority scheduling algorithms~\cite{liu1973,buttazzo2011}. Rate Monotonic~(RM)
+and Earliest Deadline First~(EDF) scheduling remain the primary reference paradigms,
+with well-understood optimality properties under their respective assumptions. Response
+Time Analysis~(RTA)~\cite{joseph1986} extended these results to account for blocking
+and shared resource access under fixed-priority scheduling, providing the analytical
+foundation that most industrial real-time system design still relies upon.
 
-Rate Monotonic (RM) and Earliest Deadline First (EDF) scheduling
-remain fundamental paradigms for real-time task scheduling.
-However, their applicability becomes limited in multicore and
-distributed environments due to migration costs, shared resource
-contention, and timing unpredictability.
+As systems have grown more complex, the applicability of uniprocessor scheduling
+theory has become increasingly limited. The transition to multicore and heterogeneous
+platforms introduces new sources of timing interference that classic models do not
+capture: shared cache contention, memory bus saturation, NUMA effects, and
+pipeline stalls caused by speculative execution. These phenomena invalidate simple
+additive compositional reasoning and have driven a substantial body of research on
+memory interference analysis and cache-aware scheduling for multicore
+platforms~\cite{mancuso2013,hoornaert2024}.
 
+% ------------------------------------------------------------
 \subsection{Multiprocessor and Distributed Scheduling}
+\label{subsec:rw_mp_scheduling}
 
-Multiprocessor real-time scheduling introduces additional
-challenges such as task migration overhead, cache effects,
-and synchronization costs. Megel et al.\ investigated
-migration-aware scheduling strategies aimed at minimizing
-preemption and migration overhead in multiprocessor systems
-~\cite{megel2010}. However, their work remains primarily
-theoretical and does not address runtime distributed execution
-across heterogeneous nodes.
+Multiprocessor real-time scheduling introduces additional challenges including task
+migration overhead, synchronization costs, and the fundamental complexity of the
+multiprocessor feasibility problem. The taxonomy of partitioned, global, and
+semi-partitioned scheduling strategies~\cite{davis2011} reflects the trade-off between
+analytical tractability and runtime efficiency: partitioned approaches allow
+independent per-core analysis but may fail to schedule task sets that global approaches
+can handle, while global approaches improve utilization at the cost of migration
+overhead and substantially harder schedulability analysis.
 
-Recent research trends highlight that scheduling decisions
-can no longer be considered independently from communication
-systems, particularly in distributed embedded systems where
-network latency is part of end-to-end timing guarantees.
+Megel et al.\ investigated migration-aware scheduling strategies aimed at minimizing
+preemption and migration overhead in global multiprocessor scheduling~\cite{megel2010}.
+Their work demonstrates that migration overhead is a first-order concern in practice,
+not a secondary effect, and must be explicitly modeled in schedulability analysis.
+However, this work addresses shared-memory multiprocessors and does not extend to
+distributed heterogeneous systems where migration involves network state transfer.
+
+In distributed systems, scheduling decisions can no longer be considered independently
+from the communication infrastructure. End-to-end latency analysis for task chains
+spanning multiple nodes~\cite{durr2019} has emerged as a key research area,
+particularly in the automotive domain where cause-effect chains connect sensor
+acquisition, computation, and actuator output across multiple ECUs. The interaction
+between node-local scheduling and network scheduling in TSN-based distributed
+systems is an active open problem~\cite{craciunas2016}, with joint optimization
+of task and network schedules shown to yield significant improvements over
+independent approaches.
+
+\textbf{Gap:} Existing multiprocessor scheduling research addresses migration cost
+primarily in shared-memory settings and does not account for criticality
+differentiation in migration policy decisions. End-to-end timing analysis for
+distributed systems has advanced significantly but has not been extended to
+account for the transient scheduling state introduced by runtime task migration.
 
 % ============================================================
 \section{Mixed-Criticality Systems}
+\label{sec:rw_mcs}
 
-Mixed-criticality systems (MCS) enable the execution of tasks
-with different safety and timing requirements on shared platforms.
-This paradigm is widely used in automotive and avionics domains
-where safety-critical and non-critical workloads coexist.
+The mixed-criticality model introduced by Vestal~\cite{vestal2007} and subsequently
+formalized by Baruah et al.~\cite{baruah2011} has generated a large body of research
+over the past fifteen years. The Burns and Davis survey~\cite{burns2017}, now in its
+thirteenth edition, documents the breadth of this field and identifies open problems
+that remain unresolved. The core mechanism of the standard MC model---mode switching
+from LO to HI upon a WCET overrun, with degradation or suspension of low-criticality
+tasks---has been extended in multiple directions.
 
-The foundational model by Vestal introduced multiple WCET
-assumptions depending on certification levels, enabling more
-flexible scheduling strategies~\cite{vestal2007}. Since then,
-extensive research has focused on improving schedulability
-analysis and runtime behavior.
+% ------------------------------------------------------------
+\subsection{Adaptive and Multicore Mixed-Criticality Scheduling}
+\label{subsec:rw_mc_adaptive}
 
-Burns and Davis provide a comprehensive survey of mixed-criticality
-systems and highlight the trade-off between resource utilization
-and timing guarantees~\cite{burns2017}. Traditional approaches
-typically rely on mode-switching mechanisms, where low-criticality
-tasks are degraded or dropped under overload conditions.
+The Adaptive Mixed Criticality~(AMC) scheduler proposed by Burns and
+Baruah~\cite{burns2013} introduced per-task mode switching, allowing finer-grained
+response to individual task overruns rather than a global system-wide mode change.
+This reduces unnecessary degradation of low-criticality tasks when only a subset of
+high-criticality tasks approach their pessimistic WCET bounds. Subsequent work
+explored elastic and imprecise computation models that allow continuous service
+adjustment rather than binary mode transitions, improving utilization while
+maintaining safety guarantees.
 
-Recent work explores more adaptive strategies, including energy-
-aware and multicore-aware scheduling approaches~\cite{mcsEnergySurvey2022}.
-However, most approaches still assume static task allocation and
-do not support runtime migration across distributed systems.
+On multicore platforms, mixed-criticality scheduling must additionally contend with
+shared resource interference. Cache partitioning and memory bandwidth
+regulation~\cite{mancuso2013} have been identified as essential mechanisms for
+providing isolation between criticality levels on shared-cache multicore hardware.
+The MCTI framework of Hoornaert et al.~\cite{hoornaert2024} provides a layered
+approach to task-based isolation, combining CPU regulation at the OS level with
+memory bandwidth control at the hypervisor level, demonstrating that strong isolation
+is achievable on commercial off-the-shelf~(COTS) multicore platforms without
+specialized hardware.
+
+Flexible and dynamic MC scheduling approaches have also been explored for scenarios
+where task criticality is not statically fixed~\cite{jiang2022flexible}. Jiang et
+al.\ propose resource allocation mechanisms that dynamically adjust service levels
+based on runtime system state, providing a more gradual degradation model than the
+binary LO/HI switch. Similarly, energy-aware MC scheduling has received growing
+attention, with surveys documenting the trade-off between power consumption and
+timing guarantees in battery-constrained embedded systems~\cite{mcsEnergySurvey2022}.
+
+% ------------------------------------------------------------
+\subsection{Mixed-Criticality in Distributed and Fault-Tolerant Systems}
+\label{subsec:rw_mc_distributed}
+
+Extending MC scheduling to distributed systems introduces the problem of mode
+propagation: when a high-criticality task on one node triggers a mode switch, nodes
+that share cause-effect chains or communication dependencies with the overrunning
+task must also adapt their scheduling behavior. This coordination requires either
+synchronous global mode transitions, which introduce communication overhead and
+potential blocking, or asynchronous local decisions that may lead to transient
+inconsistencies. Neither approach has been fully satisfactorily resolved in the
+literature.
+
+Fault-tolerant mixed-criticality scheduling has been investigated by several groups.
+The work of Melani et al.~\cite{melani2017} addresses fault-tolerant scheduling of
+MC task sets on distributed platforms using temporal redundancy, with spatial
+separation constraints derived from hazard analysis. Reghenzani et al.~\cite{reghenzani2022}
+propose a mixed-criticality approach to fault tolerance in which criticality levels
+directly govern the degree of redundancy and the recovery time budget allocated to
+each task. These approaches demonstrate that MC and fault tolerance are complementary
+rather than conflicting concerns, but they assume static task allocation and do not
+address the case where the execution node of a task changes at runtime.
+
+The most directly relevant recent work to this dissertation is that of Baik et
+al.~\cite{baik2022}, who propose a task migration and scheduling framework
+specifically for mixed-criticality systems in vehicle safety applications. Their
+approach allows low-criticality tasks to temporarily execute on neighboring nodes
+when their local platform is under high load, effectively extending schedulability
+by borrowing compute capacity, while preserving high-criticality task guarantees
+through deadline-based compatibility tests. However, their approach operates at the
+task activation level rather than providing a full execution state migration
+mechanism, and does not address the state transfer, checkpoint, and loading
+overhead involved in migrating a partially-executed task.
+
+\textbf{Gap:} The intersection of MC scheduling with runtime execution state
+migration, where a task's in-progress execution, including stack state and
+accumulated progress, is transferred to a different node, has not been addressed.
+Existing distributed MC work either assumes static allocation or addresses only
+coarse-grained failover at the task activation level.
 
 % ============================================================
 \section{Distributed Real-Time Systems and Automotive Architectures}
+\label{sec:rw_distributed}
 
-Distributed real-time systems consist of multiple computational
-nodes connected via a communication network. These systems are
-widely used in automotive, aerospace, and industrial automation.
+Distributed real-time systems consist of multiple computational nodes connected via
+a communication network, and are the dominant architecture in automotive, aerospace,
+and industrial automation domains. The automotive domain has undergone particularly
+rapid architectural evolution in recent years, driven by the growing computational
+demands of ADAS, autonomous driving, and software-defined vehicle~(SDV) functionality.
 
-Modern automotive architectures are transitioning from distributed
-Electronic Control Unit (ECU)-based systems towards centralized
-and zonal architectures. This transition is driven by increasing
-computational demands from advanced driver assistance systems
-and autonomous driving functionalities~\cite{baunach2018}.
+% ------------------------------------------------------------
+\subsection{Automotive Architecture Evolution}
+\label{subsec:rw_automotive}
 
-Recent developments in software-defined vehicles (SDVs) and
-centralized automotive computing platforms further accelerate
-this transformation~\cite{sdvSurvey2024}. These architectures
-aim to consolidate computation onto high-performance platforms
-while maintaining real-time guarantees.
+The traditional domain-oriented ECU architecture, in which separate ECUs independently
+manage powertrain, chassis, body electronics, and infotainment, is giving way to
+centralized and zonal architectures~\cite{sdv2024,automotivehpc2023}. In a zonal
+architecture, ECUs are grouped by physical vehicle zone rather than by function,
+with high-bandwidth Ethernet backbones connecting zone controllers to one or more
+central compute platforms. This consolidation reduces wiring harness complexity, a
+significant factor in vehicle weight and assembly cost, while enabling more powerful
+centralized processing and simpler over-the-air software updates.
 
-At the same time, Time-Sensitive Networking (TSN) has emerged
-as a key enabling technology for deterministic communication in
-Ethernet-based systems. TSN introduces mechanisms such as the
-Time-Aware Shaper (TAS), which enables time-triggered scheduling
-of network traffic.
+The SDV concept extends this further by treating all vehicle functions as software
+services deployable and updatable independently of the underlying hardware. Industry
+adoption is accelerating: major OEMs and Tier-1 suppliers have announced centralized
+compute platform programs, and the AUTOSAR Adaptive Platform~\cite{autosar2023}
+provides a standardized software framework targeting these high-performance computing
+nodes with support for dynamic service deployment and POSIX-compatible execution
+environments.
 
-A comprehensive survey of TSN scheduling mechanisms is provided
-by Stüber et al.~\cite{tsnSurvey2023}, while more recent work
-investigates experimental evaluations of TSN scheduling approaches
-in industrial scenarios~\cite{tsnRtas2024}.
+From a research perspective, this architectural transition surfaces a critical
+challenge: as more functions are consolidated onto fewer, more powerful nodes, the
+consequences of a node failure become more severe, making fault tolerance and runtime
+adaptation---including task migration---correspondingly more important.
 
-Despite these advances, most distributed real-time architectures
-still rely on static task allocation, where execution placement
-is determined offline and remains unchanged during runtime.
+% ------------------------------------------------------------
+\subsection{Time-Sensitive Networking}
+\label{subsec:rw_tsn}
 
+Time-Sensitive Networking~(TSN) has emerged as the dominant communication technology
+for deterministic Ethernet-based distributed embedded systems. The suite of IEEE 802.1
+amendments provides mechanisms for time synchronization~(802.1AS), time-aware traffic
+shaping~(802.1Qbv), frame preemption~(802.1Qbu), and credit-based
+shaping~(802.1Qav), collectively enabling multiple traffic classes with heterogeneous
+latency and bandwidth requirements to coexist on shared infrastructure.
+
+The scheduling of time-triggered traffic in TSN networks using the Time-Aware
+Shaper~(TAS) has attracted substantial research attention. St\"{u}ber et
+al.~\cite{stuber2022} provide a comprehensive survey of TAS scheduling algorithms,
+documenting the optimization objectives, problem formulations, and evaluation
+methodologies of existing approaches. A more recent systematic review and experimental
+study by Xue et al.~\cite{xue2024} evaluates 17 representative TAS scheduling methods
+on both simulation and real hardware testbeds, identifying that no single method
+dominates across all scenarios and that the interaction between network topology,
+traffic pattern, and scheduling algorithm is highly application-specific.
+
+Joint scheduling of tasks and network traffic in TSN-based distributed real-time
+systems has been shown to offer significant improvements over independent
+approaches~\cite{craciunas2016}. In such systems, the network schedule and the task
+schedule on each node are mutually dependent: the timing of task activations
+determines when frames are generated, while the network schedule determines when
+results become available for downstream tasks. This co-design problem becomes even
+more complex when tasks may migrate between nodes at runtime.
+
+\textbf{Gap:} Existing TSN scheduling research does not address the case where the
+task assignment to nodes changes dynamically. Migration introduces transient traffic
+patterns (e.g. state transfer streams, coordination messages) that are not captured in
+any existing TSN scheduling model, and may require dynamic reconfiguration of the
+network schedule during a migration event.
+
+% ============================================================
 \section{Task Offloading and Orchestration in IoT and Edge Systems}
+\label{sec:rw_edge}
 
-In parallel to research on distributed real-time systems, a large
-body of work in the Internet of Things (IoT), edge computing, and
-fog computing has investigated the problem of task offloading and
-resource orchestration across heterogeneous computing nodes.
+In parallel to research on distributed real-time systems, a large body of work in the
+Internet of Things~(IoT), edge computing, and fog computing has investigated the
+problem of task offloading and resource orchestration across heterogeneous computing
+nodes. These works provide relevant conceptual models and optimization techniques,
+even though their primary target is best-effort or soft real-time workloads.
 
-In IoT and edge environments, resource-constrained devices often
-lack sufficient computational capacity to execute complex workloads
-locally. To address this limitation, task offloading mechanisms
-transfer computation to more capable edge or cloud resources,
-reducing execution latency, energy consumption, or improving
-system scalability.
+Mao et al.~\cite{mao2017mobile} studied computation offloading strategies in mobile
+edge computing~(MEC) systems, demonstrating that optimal offloading decisions must
+jointly account for communication cost, computation latency, and energy consumption,
+and that these factors interact in non-trivial ways depending on dynamic system
+conditions. You et al.~\cite{you2017energy} extended this to joint communication and
+computation resource allocation, showing that network and compute constraints must
+be optimized simultaneously rather than independently.
 
-Mao et al.\ studied computation offloading strategies in mobile
-edge computing systems and highlighted the trade-off between
-communication cost, computation latency, and energy consumption
-\cite{mao2017mobile}. Their work shows that optimal offloading
-decisions depend on dynamic system conditions such as network
-load and device state.
+Container-based virtualization has been increasingly adopted for edge computing
+deployments, offering process isolation and portability with lower overhead than
+full virtual machines. Empirical studies of checkpoint/restore in containerized
+environments~\cite{tosic2023} demonstrate that container migration latency is
+dominated by the size of the process memory image and network transfer time rather
+than by container initialization overhead, a finding that directly informs the
+Virtual ECU migration strategy investigated in this dissertation. Morabito et
+al.~\cite{morabito2018} evaluated the performance overhead of container
+virtualization on IoT edge devices, finding that containerization imposes measurable
+but manageable overhead for compute-bound workloads while adding significant latency
+for storage and network operations.
 
-Similarly, You et al.\ analyzed joint communication and computation
-resource allocation for mobile edge systems, demonstrating that
-offloading decisions must consider both network and compute
-constraints simultaneously \cite{you2017energy}.
+A fundamental limitation of IoT and edge offloading research is its assumption of
+relaxed or best-effort timing constraints. Offloading frameworks prioritize
+throughput, energy efficiency, or cost, and treat latency as a soft optimization
+objective rather than a hard real-time requirement. This limits the direct
+applicability of these approaches to safety-critical embedded systems. Nevertheless,
+the architectural patterns for dynamic task placement, hierarchical resource
+management, and state transfer developed in this body of work provide valuable
+reference models for the Virtual ECU migration tier explored in this dissertation,
+where non-safety-critical tasks may be offloaded to edge resources under controlled
+conditions.
 
-Recent research in fog and edge computing has extended these ideas
-towards multi-node orchestration frameworks, where workloads are
-dynamically distributed across hierarchical computing layers
-(edge, fog, cloud). These systems often rely on centralized or
-semi-centralized orchestration components that continuously
-optimize task placement based on system state information.
-
-Shi et al.\ provide a comprehensive survey of edge computing
-architectures and highlight orchestration as a key challenge for
-scalable IoT systems \cite{shi2016edge}.
-
-More recent studies emphasize the use of container orchestration
-frameworks and serverless computing models to dynamically manage
-task placement in distributed environments. However, these systems
-are typically designed for best-effort execution environments and
-do not provide hard real-time guarantees.
-
-While IoT and edge computing research provides powerful models for
-dynamic task offloading and system-wide orchestration, most existing
-approaches assume relaxed timing constraints and prioritize
-throughput, energy efficiency, or cost optimization.
-
-In contrast, real-time embedded systems require deterministic timing
-guarantees, bounded execution latency, and predictable scheduling
-behavior. This fundamental difference limits the direct applicability
-of IoT offloading techniques to safety-critical real-time systems.
-
-Nevertheless, the conceptual overlap between task offloading in IoT
-systems and task migration in distributed real-time systems provides
-an important foundation for this dissertation. Both domains address
-the problem of dynamically assigning computational tasks to
-distributed resources under changing system conditions, albeit with
-different constraints and objectives.
+\textbf{Gap:} Edge and IoT offloading frameworks do not provide hard real-time
+guarantees and do not integrate with onboard mixed-criticality scheduling. The
+conditions under which edge offloading is safe for tasks at the lowest criticality
+levels of an automotive MC system---and the latency and reliability constraints that
+the communication path must satisfy---have not been systematically studied.
 
 % ============================================================
 \section{Task Migration in Real-Time Systems}
+\label{sec:rw_migration}
 
-Task migration has been widely studied as a mechanism to improve
-load balancing, fault tolerance, and resource utilization in
-real-time systems. However, it introduces significant challenges
-related to timing predictability, communication overhead, and
-state consistency.
+Task migration has been studied from several angles in the real-time systems
+literature: as a mechanism for load balancing in multiprocessor scheduling, as a
+fault recovery mechanism in distributed systems, and more recently as a component
+of adaptive orchestration frameworks.
 
-Migration-aware scheduling approaches primarily aim at reducing
-migration overhead while preserving schedulability guarantees.
-Megel et al.\ demonstrated the cost sensitivity of migration in
-multiprocessor scheduling~\cite{megel2010}.
+% ------------------------------------------------------------
+\subsection{Migration Overhead and Schedulability}
+\label{subsec:rw_migration_overhead}
 
-In fault-tolerant systems, migration is often used for recovery
-purposes. Chen and Lyu proposed a FlexRay-based framework in which
-backup ECUs take over execution in case of failure~\cite{chen2012}.
-However, such approaches operate at coarse granularity (ECU level)
-and do not support fine-grained task migration between active nodes.
+In multiprocessor real-time scheduling, migration overhead is a well-recognized
+first-order concern. Megel et al.~\cite{megel2010} demonstrated that migration
+and preemption costs must be explicitly bounded and included in schedulability
+analysis, and proposed scheduling strategies that minimize the number of migrations
+while preserving global feasibility. Their work established that the commonly used
+simplification of treating migration as instantaneous is untenable in practice.
 
-Recent research in TSN and distributed systems highlights that
-dynamic routing and scheduling are tightly coupled problems,
-further increasing the complexity of runtime adaptation
-~\cite{tsnSchedAnalysis2024}.
+More recent work on migration-aware scheduling in heterogeneous multiprocessor
+systems~\cite{davis2011} has confirmed that the overhead of migration---including
+cache repopulation, TLB invalidation, and pipeline refilling on the destination
+processor---can dominate the actual task execution time for short-period tasks,
+making migration frequency a critical design parameter.
 
-Overall, most existing approaches either focus on theoretical
-scheduling models or coarse-grained fault recovery mechanisms,
-with limited support for runtime task migration in heterogeneous
-distributed systems.
+% ------------------------------------------------------------
+\subsection{Fault-Tolerant Migration in Embedded Systems}
+\label{subsec:rw_migration_fault}
+
+In fault-tolerant embedded systems, migration is primarily used as a recovery
+mechanism triggered by hardware failure. Chen and Lyu~\cite{chen2012} proposed a
+FlexRay-based framework in which backup ECUs take over execution when the primary
+fails. However, their approach operates at coarse granularity: entire ECU function
+groups are reassigned, rather than providing fine-grained task-level migration with
+state preservation. The checkpoint-restore approach to fault-tolerant migration,
+surveyed comprehensively by Elnozahy et al.~\cite{elnozahy2002}, provides a
+principled mechanism for capturing and restoring execution state, but the original
+work targets message-passing cluster systems rather than resource-constrained
+embedded nodes with hard real-time constraints.
+
+Checkpoint-based migration in real-time embedded contexts introduces the specific
+challenge that the checkpointing operation itself consumes time and memory resources,
+and this overhead must be budgeted in the schedulability analysis of the checkpointed
+task. If checkpointing is performed periodically, the checkpoint interval must be
+chosen to balance recovery cost (coarser intervals mean more re-execution after
+recovery) against runtime overhead (finer intervals impose more frequent interruptions).
+
+% ------------------------------------------------------------
+\subsection{Runtime Migration in Distributed Real-Time Systems}
+\label{subsec:rw_migration_distributed}
+
+Research on runtime task migration specifically for distributed real-time systems
+remains limited. The DFT4FTT project investigated adaptive task allocation in
+distributed embedded systems supporting real-time, reliability, and adaptivity
+requirements, proposing greedy online heuristics for migrating safety-critical tasks
+in response to permanent faults while adjusting soft real-time task service parameters
+on the target node~\cite{dft4ftt}. This work represents one of the closest precedents
+to the approach developed in this dissertation, but does not address mixed-criticality
+scheduling or the ELF-based execution state transfer mechanisms required for
+heterogeneous embedded targets.
+
+The interaction between dynamic task migration and TSN network scheduling has been
+highlighted as an open problem by recent work on joint task and network
+scheduling~\cite{craciunas2016,xue2024}: a migration event changes the traffic
+pattern on the network, potentially invalidating the network schedule that was
+computed for the static task assignment.
+
+\textbf{Gap:} No existing work provides a complete runtime task migration system for
+distributed embedded real-time systems that (a)~differentiates migration policy and
+mechanism by criticality level, (b)~handles the full execution state transfer
+including checkpoint and ELF-based loading on heterogeneous embedded targets,
+and (c)~accounts for the schedulability implications of migration events on both
+source and destination nodes under a mixed-criticality scheduling framework.
 
 % ============================================================
 \section{Machine Learning for Scheduling and Deployment}
+\label{sec:rw_ml}
 
-Machine learning techniques have been increasingly applied to
-scheduling and resource allocation problems due to their ability
-to approximate complex optimization problems.
+Machine learning techniques have been increasingly applied to scheduling and resource
+allocation problems due to their ability to approximate complex optimization objectives
+that are intractable for exact methods. In the real-time scheduling domain, the
+primary motivation is the computational cost of exact schedulability analysis for
+large task sets: algorithms such as response time analysis scale poorly with the
+number of tasks and become infeasible for runtime use.
 
-Early work explored neural network approaches for schedulability
-analysis and real-time scheduling prediction~\cite{cardeira1994,dominguez2004}.
-These approaches primarily focused on offline system design.
+Early work explored neural network approaches for offline schedulability prediction
+and task ordering~\cite{cardeira1994,dominguez2004}. These approaches demonstrated
+that learned predictors could achieve high accuracy on synthetic task sets, but were
+limited to offline design-time use and did not generalize well across task set
+distributions.
 
-More recent research investigates learning-based approaches for
-resource allocation in dynamic systems. In particular, reinforcement
-learning has been applied to distributed scheduling and routing
-problems, especially in TSN and edge environments.
+More recent research at the chair, conducted across multiple theses~\cite{taieb1,
+	utz1,blieninger1}, applied neural network-based feasibility prediction to the
+migration planning problem. The key insight is that predicting schedulability, a
+binary decision, is faster than computing exact response times, making runtime
+replanning tractable even for large task sets. The trade-off is that neural network
+predictions are not unconditionally safe: false positive predictions~(declaring a
+task set feasible when it is not) can occur, and the rate of such errors must be
+characterized and bounded for safety-critical use.
 
-However, despite promising results, most machine learning-based
-approaches remain limited to simulation or offline optimization
-and are not integrated into real-time operating systems with
-strict deterministic guarantees.
+Reinforcement learning~(RL) has been applied to dynamic scheduling and routing
+problems in TSN and edge environments, with promising results in simulation but
+limited deployment in safety-critical real-time systems. The fundamental challenge
+is that RL policies do not provide formal timing guarantees: a learned policy may
+perform well on average but cannot be certified to satisfy hard deadlines under all
+possible inputs. Bridging the gap between the performance of ML-based approaches
+and the certification requirements of safety-critical domains remains an open
+research problem.
+
+\textbf{Gap:} Existing ML-based scheduling and planning tools at the chair were
+developed for single-criticality task sets and do not incorporate mixed-criticality
+parameters. Extending one of these tools to support MC task sets, where each task has
+multiple WCET estimates and the feasibility prediction must account for potential
+mode switches, is a secondary contribution of this dissertation.
 
 % ============================================================
-\section{Existing Architectures and Frameworks}
+\section{Prior Work at the Chair}
+\label{sec:rw_chair}
 
-Several research projects have investigated architectures for
-adaptive deployment and distributed execution in automotive systems.
+Research at the Chair of Operating Systems at TUM has produced a series of projects
+and theses directly relevant to this dissertation. These works constitute the
+technical foundation on which the contributions of this dissertation build, and
+understanding their scope and limitations is essential for positioning the
+novelty of the present work.
 
-The KIA4SM project proposed a cooperative integration architecture
-for future smart mobility systems, enabling task migration across
-heterogeneous automotive platforms and introducing checkpoint-restore
-mechanisms~\cite{eckl2015}.
+The KIA4SM project~\cite{eckl2015} introduced a cooperative integration architecture
+for smart mobility systems, demonstrating the feasibility of task migration across
+heterogeneous automotive platforms based on Fiasco.OC and Genode OS. KIA4SM
+established the two-stage migration architecture (planning and execution) that
+subsequent projects have retained, and developed an initial checkpoint-restore
+mechanism for capturing and restoring task execution state.
 
-While such architectures demonstrate the feasibility of distributed
-execution, they remain primarily conceptual or prototype-level
-systems without full integration into real-time operating systems
-supporting fine-grained runtime migration.
+The HaCRoM project extended the checkpoint-restore mechanism and investigated its
+application to fault-tolerant task migration in real-time systems. This work provided
+a more detailed characterization of checkpoint overhead and state transfer latency,
+establishing empirical baselines for the feasibility of runtime migration on
+embedded platforms.
 
-Recent research in virtualization and partitioning further explores
-isolation mechanisms for mixed-criticality systems, but these
-approaches typically assume static deployment models and do not
-support dynamic task relocation.
+The MaLSAMi project shifted focus to the migration planning stage, applying
+machine learning to the runtime schedulability prediction problem. A series of
+theses by Taieb~\cite{taieb1}, Utz~\cite{utz1}, and Blieninger~\cite{blieninger1}
+progressively refined the neural network approach, improving prediction accuracy
+and evaluating generalization across different task set distributions. A parallel
+line of work by Delgadillo~\cite{delgadillo1} transitioned the execution platform
+from Genode OS to FreeRTOS, establishing the embedded platform baseline that this
+dissertation extends.
+
+None of the prior projects at the chair have integrated mixed-criticality concepts
+into either the planning or execution stages of the migration system. All prior work
+treats tasks as having a single, undifferentiated criticality level. The contributions
+of this dissertation---the MC extension of the FreeRTOS-based platform (Axcan OS),
+the criticality-differentiated migration strategies, the ELF-based guest task
+architecture, and the MC-aware adaptation of the planning toolchain---directly
+address this limitation.
 
 % ============================================================
-\section{Research Gap}
+% ============================================================
+\section{Research Gap Summary}
+\label{sec:rw_gap}
 
-The reviewed literature shows significant progress in real-time
-scheduling, mixed-criticality systems, distributed architectures,
-and task migration. However, important limitations remain.
+The reviewed literature demonstrates substantial progress across all individual domains relevant to this dissertation. Classical real-time scheduling theory provides strong analytical foundations for uniprocessor and multiprocessor systems under static task assumptions. Mixed-criticality scheduling extends these foundations by introducing adaptive execution modes and controlled degradation strategies. Distributed real-time systems and TSN-based communication architectures enable deterministic timing guarantees across networked embedded platforms. Task migration has been studied primarily as a mechanism for load balancing or fault recovery, and machine learning techniques have shown promise for approximating schedulability and enabling fast runtime decision-making.
 
-Most existing approaches treat scheduling, communication, and
-deployment as separate concerns. Real-time systems typically rely
-on static task allocation, while mixed-criticality systems focus on
-controlled degradation rather than runtime adaptation. Distributed
-architectures improve scalability but lack fine-grained dynamic
-reconfiguration capabilities.
+Despite these advances, existing approaches share a fundamental underlying assumption: \textit{the binding between a task, its execution state, and its assigned computational node is static during runtime}. Under this assumption, tasks are treated as atomic scheduling entities whose execution is either fully local to a node or transferred only at coarse granularity (e.g., task restart or activation-level reassignment). As a consequence, neither scheduling theory, distributed system models, nor mixed-criticality frameworks explicitly account for the implications of \textit{partially executed, migrating tasks} in systems where execution state is dynamically transferable.
 
-Task migration is generally addressed either in theoretical models
-or coarse-grained fault-tolerant systems. Machine learning approaches
-provide promising optimization capabilities but are rarely integrated
-into safety-critical real-time execution environments.
+Breaking this assumption exposes a set of tightly coupled limitations across the state of the art:
 
-Consequently, there is a lack of integrated system-level architectures
-capable of supporting fine-grained runtime task migration across
-distributed heterogeneous mixed-criticality systems while preserving
-strict timing guarantees.
+\begin{enumerate}
+	\item \textbf{Mixed-criticality scheduling models do not support stateful execution migration.}  
+	Existing MC approaches assume that tasks are indivisible scheduling units. Mode-switching semantics operate at the level of task suspension, degradation, or restart, but do not consider the transfer of partially executed state between nodes. As a result, criticality-aware decision-making cannot be extended to fine-grained migration policies that depend on execution progress or intermediate state.
+	
+	\item \textbf{Distributed real-time scheduling theory does not model transient execution-state inconsistencies.}  
+	Current end-to-end timing analysis assumes static task-to-node mappings. When migration is considered, it is typically modeled as a discrete reallocation event rather than a continuous transition with overlapping execution, state transfer delays, and transient dual-node scheduling effects. This limits the applicability of existing schedulability analyses to systems with runtime task relocation.
+	
+	\item \textbf{TSN-based communication models assume static traffic generation patterns.}  
+	Time-Sensitive Networking schedules are typically computed offline based on fixed traffic matrices derived from static task allocations. Runtime migration invalidates this assumption by introducing transient traffic flows (e.g., state transfer streams and coordination messages), which are not represented in existing scheduling models and may violate precomputed network schedules.
+	
+	\item \textbf{Edge and IoT offloading frameworks do not enforce hard real-time or mixed-criticality constraints.}  
+	Existing offloading approaches treat latency, energy consumption, and cost as optimization objectives rather than hard constraints. They also assume relaxed correctness models that do not incorporate mixed-criticality guarantees, preventing their direct use in safety-critical embedded systems where deadline guarantees must be preserved across heterogeneous execution tiers.
+	
+	\item \textbf{Machine learning-based scheduling and migration approaches are not mixed-criticality aware.}  
+	Learned schedulability predictors and migration policies are typically trained on single-criticality task sets and assume static system configurations. They do not model WCET uncertainty distributions across criticality levels nor the impact of runtime migration on system feasibility, limiting their applicability in mixed-criticality real-time systems.
+\end{enumerate}
 
-This dissertation addresses this gap by proposing a distributed
-real-time operating system architecture enabling adaptive task
-migration across heterogeneous execution platforms.
+\noindent
+These limitations converge to a central gap: \textbf{there is currently no unified model for runtime execution-state migration in distributed mixed-criticality real-time systems, where both scheduling decisions and communication behavior must remain schedulability-aware during partial task execution transfer across heterogeneous nodes.}
+
+This dissertation addresses this gap by introducing a mixed-criticality-aware migration framework that explicitly models execution state transfer, integrates migration decisions into schedulability analysis, and accounts for the resulting dynamic changes in both local scheduling behavior and network-level timing constraints. The proposed Axcan OS platform provides a concrete implementation of this model and enables empirical evaluation of its feasibility in distributed embedded environments.
 
 %\begin{tikzpicture}[scale=1.1]
 %	
