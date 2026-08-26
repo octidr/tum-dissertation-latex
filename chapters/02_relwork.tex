@@ -1050,74 +1050,136 @@ mode switches, is a secondary contribution of this dissertation.
 \label{sec:rw_chair}
 
 Research at the Chair of Operating Systems at TUM has produced a series of projects
-and theses directly relevant to this dissertation. These works constitute the
-technical foundation on which the contributions of this dissertation build, and
-understanding their scope and limitations is essential for positioning the
-novelty of the present work.
+and theses directly relevant to this dissertation. These works form the technical
+and conceptual foundation for task migration and adaptive execution in distributed
+embedded systems. However, their focus differs fundamentally from the approach
+presented in this dissertation: prior work primarily investigates migration as a
+planning, orchestration, or checkpointing problem, while assuming that a runtime
+execution substrate for stateful task migration is either available or abstracted
+away.
 
 The KIA4SM project~\cite{eckl2015} introduced a cooperative integration architecture
-for smart mobility systems, demonstrating the feasibility of task migration across
-heterogeneous automotive platforms based on Fiasco.OC and Genode OS. KIA4SM
-established the two-stage migration architecture (planning and execution) that
-subsequent projects have retained, and developed an initial checkpoint-restore
-mechanism for capturing and restoring task execution state.
+for smart mobility systems based on Genode OS and Fiasco.OC. It demonstrated the
+feasibility of distributed automotive software components and introduced a
+two-stage migration concept (planning and execution). However, the execution stage
+relies on system-level abstractions and does not provide a lightweight mechanism
+for directly transferring and resuming task execution state on heterogeneous
+embedded targets.
 
-The HaCRoM project extended the checkpoint-restore mechanism and investigated its
-application to fault-tolerant task migration in real-time systems. This work provided
-a more detailed characterization of checkpoint overhead and state transfer latency,
-establishing empirical baselines for the feasibility of runtime migration on
-embedded platforms.
+The HaCRoM project extended checkpoint-restore mechanisms for fault-tolerant task
+migration in real-time systems. While this work established important empirical
+insights into checkpoint overhead and feasibility, it primarily focuses on state
+capture and recovery as a fault tolerance mechanism. The actual execution of
+migrated tasks is still assumed to be supported by the underlying runtime system,
+rather than being implemented as a minimal operating-system-level capability.
 
-The MaLSAMi project shifted focus to the migration planning stage, applying
-machine learning to the runtime schedulability prediction problem. A series of
-theses by Taieb~\cite{taieb1}, Utz~\cite{utz1}, and Blieninger~\cite{blieninger1}
-progressively refined the neural network approach, improving prediction accuracy
-and evaluating generalization across different task set distributions. A parallel
-line of work by Delgadillo~\cite{delgadillo1} transitioned the execution platform
-from Genode OS to FreeRTOS, establishing the embedded platform baseline that this
-dissertation extends.
+The MaLSAMi project shifted focus toward migration decision-making and planning
+using machine learning-based schedulability prediction. A series of theses by
+Taieb~\cite{taieb1}, Utz~\cite{utz1}, and Blieninger~\cite{blieninger1} improved
+the accuracy of feasibility prediction models for task allocation and migration
+decisions. However, these approaches operate at the level of decision support and
+do not address how a task is actually executed after migration, particularly in
+heterogeneous embedded environments.
 
-None of the prior projects at the chair have integrated mixed-criticality concepts
-into either the planning or execution stages of the migration system. All prior work
-treats tasks as having a single, undifferentiated criticality level. The contributions
-of this dissertation---the MC extension of the FreeRTOS-based platform (Axcan OS),
-the criticality-differentiated migration strategies, the ELF-based guest task
-architecture, and the MC-aware adaptation of the planning toolchain---directly
-address this limitation.
+A parallel line of work by Delgadillo~\cite{delgadillo1} transitioned parts of the
+execution environment to FreeRTOS, enabling experiments closer to embedded hardware
+constraints. Nevertheless, the system still assumes that task execution is locally
+bound and does not provide a mechanism for transferring partially executed runtime
+state between nodes with different execution contexts.
 
-% ============================================================
+In summary, prior work at the chair has progressively addressed migration planning,
+checkpointing, and feasibility prediction, but none of these systems implement
+migration as a first-class execution primitive within a lightweight embedded
+operating system. Instead, migration is treated as a higher-level orchestration
+decision, while the execution of migrated tasks remains outside the scope of the
+runtime system itself.
+
+None of the prior projects at the chair integrate mixed-criticality concepts into
+a complete runtime migration execution system. More importantly, none provide a
+lightweight OS-level mechanism for stateful task migration across heterogeneous
+embedded nodes.
+
+The contributions of this dissertation address this gap by introducing Axcan OS,
+a FreeRTOS-based execution substrate that enables stateful task migration as a
+first-class primitive, including execution state capture, transfer, and resumption
+on heterogeneous embedded platforms. This runtime capability forms the foundation
+on which higher-level scheduling, mixed-criticality management, and planning
+mechanisms operate.
+
 % ============================================================
 \section{Research Gap Summary}
 \label{sec:rw_gap}
 
-The reviewed literature demonstrates substantial progress across all individual domains relevant to this dissertation. Classical real-time scheduling theory provides strong analytical foundations for uniprocessor and multiprocessor systems under static task assumptions. Mixed-criticality scheduling extends these foundations by introducing adaptive execution modes and controlled degradation strategies. Distributed real-time systems and TSN-based communication architectures enable deterministic timing guarantees across networked embedded platforms. Task migration has been studied primarily as a mechanism for load balancing or fault recovery, and machine learning techniques have shown promise for approximating schedulability and enabling fast runtime decision-making.
+The reviewed literature demonstrates substantial progress across real-time scheduling theory,
+mixed-criticality systems, distributed embedded architectures, communication networks, and
+task migration research. Classical real-time scheduling provides a strong analytical basis
+for fixed and dynamic priority systems under static task assumptions. Mixed-criticality
+research extends these models with adaptive execution modes and controlled degradation
+strategies. Distributed real-time systems and Time-Sensitive Networking (TSN) provide
+deterministic communication foundations for networked embedded systems. Finally, task
+migration and checkpointing techniques explore mechanisms for relocating computation,
+primarily in the context of fault tolerance or load balancing.
 
-Despite these advances, existing approaches share a fundamental underlying assumption: \textit{the binding between a task, its execution state, and its assigned computational node is static during runtime}. Under this assumption, tasks are treated as atomic scheduling entities whose execution is either fully local to a node or transferred only at coarse granularity (e.g., task restart or activation-level reassignment). As a consequence, neither scheduling theory, distributed system models, nor mixed-criticality frameworks explicitly account for the implications of \textit{partially executed, migrating tasks} in systems where execution state is dynamically transferable.
+Despite these advances, existing approaches share a fundamental architectural limitation:
+\textit{task execution is assumed to be bound to a fixed runtime execution context, and
+	migration is treated as either a high-level scheduling decision or a coarse-grained fault
+	recovery action, rather than as a continuous, OS-supported execution capability}. In all
+existing models, the operating system is assumed to execute tasks locally, while migration
+is abstracted as task reactivation, restart, or external orchestration.
 
-Breaking this assumption exposes a set of tightly coupled limitations across the state of the art:
+This abstraction leads to a missing execution layer in current distributed embedded systems:
+there is no lightweight operating system substrate that enables \textbf{stateful, partially
+	executed task migration across heterogeneous nodes as a first-class runtime primitive}.
+As a result, several fundamental limitations remain unresolved:
 
 \begin{enumerate}
-	\item \textbf{Mixed-criticality scheduling models do not support stateful execution migration.}  
-	Existing MC approaches assume that tasks are indivisible scheduling units. Mode-switching semantics operate at the level of task suspension, degradation, or restart, but do not consider the transfer of partially executed state between nodes. As a result, criticality-aware decision-making cannot be extended to fine-grained migration policies that depend on execution progress or intermediate state.
 	
-	\item \textbf{Distributed real-time scheduling theory does not model transient execution-state inconsistencies.}  
-	Current end-to-end timing analysis assumes static task-to-node mappings. When migration is considered, it is typically modeled as a discrete reallocation event rather than a continuous transition with overlapping execution, state transfer delays, and transient dual-node scheduling effects. This limits the applicability of existing schedulability analyses to systems with runtime task relocation.
+	\item \textbf{Absence of OS-level execution state migration mechanisms.}  
+	Existing checkpoint-restore and migration approaches operate as external mechanisms or
+	framework-level services. They do not integrate execution state capture, transfer, and
+	resumption directly into a lightweight real-time operating system. Consequently, partially
+	executed tasks cannot be transparently migrated and resumed across heterogeneous embedded
+	nodes with minimal runtime overhead.
 	
-	\item \textbf{TSN-based communication models assume static traffic generation patterns.}  
-	Time-Sensitive Networking schedules are typically computed offline based on fixed traffic matrices derived from static task allocations. Runtime migration invalidates this assumption by introducing transient traffic flows (e.g., state transfer streams and coordination messages), which are not represented in existing scheduling models and may violate precomputed network schedules.
+	\item \textbf{Static execution binding in distributed real-time systems.}  
+	Current distributed scheduling models assume a fixed mapping between tasks and execution
+	nodes. Migration, when considered, is modeled as a discrete reassignment event rather than
+	a runtime continuation of execution state. This prevents accurate modeling of transient
+	execution phases, where a task is simultaneously influenced by source-side execution state,
+	transfer latency, and destination-side scheduling constraints.
 	
-	\item \textbf{Edge and IoT offloading frameworks do not enforce hard real-time or mixed-criticality constraints.}  
-	Existing offloading approaches treat latency, energy consumption, and cost as optimization objectives rather than hard constraints. They also assume relaxed correctness models that do not incorporate mixed-criticality guarantees, preventing their direct use in safety-critical embedded systems where deadline guarantees must be preserved across heterogeneous execution tiers.
+	\item \textbf{Incompatibility of migration with deterministic communication schedules.}  
+	TSN-based systems assume statically known traffic patterns derived from fixed task-to-node
+	assignments. Stateful task migration violates this assumption by introducing dynamic,
+	time-varying communication flows, including execution state transfer and coordination traffic,
+	which are not represented in existing offline-computed network schedules.
 	
-	\item \textbf{Machine learning-based scheduling and migration approaches are not mixed-criticality aware.}  
-	Learned schedulability predictors and migration policies are typically trained on single-criticality task sets and assume static system configurations. They do not model WCET uncertainty distributions across criticality levels nor the impact of runtime migration on system feasibility, limiting their applicability in mixed-criticality real-time systems.
+	\item \textbf{Lack of real-time capable offloading with execution continuity.}  
+	Edge and IoT offloading frameworks support dynamic task placement across heterogeneous
+	resources, but treat tasks as restartable computation units. They do not provide mechanisms
+	for preserving execution continuity under hard real-time constraints, nor do they integrate
+	with embedded operating system scheduling semantics.
+	
+	\item \textbf{Separation of learning-based decision models from execution mechanisms.}  
+	Machine learning approaches for scheduling and migration focus on predicting feasibility or
+	optimizing allocation decisions, but assume that execution after migration is handled by an
+	external runtime system. They do not model or control the execution state transfer process,
+	nor its impact on real-time schedulability in mixed-criticality systems.
+	
 \end{enumerate}
 
 \noindent
-These limitations converge to a central gap: \textbf{there is currently no unified model for runtime execution-state migration in distributed mixed-criticality real-time systems, where both scheduling decisions and communication behavior must remain schedulability-aware during partial task execution transfer across heterogeneous nodes.}
+These limitations converge to a single fundamental gap: \textbf{the absence of a lightweight
+	operating system execution substrate that enables stateful task migration as a first-class
+	primitive in distributed heterogeneous real-time systems, while preserving real-time
+	constraints during execution state transfer and resumption.}
 
-This dissertation addresses this gap by introducing a mixed-criticality-aware migration framework that explicitly models execution state transfer, integrates migration decisions into schedulability analysis, and accounts for the resulting dynamic changes in both local scheduling behavior and network-level timing constraints. The proposed Axcan OS platform provides a concrete implementation of this model and enables empirical evaluation of its feasibility in distributed embedded environments.
-
+This dissertation addresses this gap through the design and implementation of Axcan OS, a
+FreeRTOS-based execution substrate that integrates execution state capture, transfer, and
+resumption directly into the runtime system. On top of this substrate, higher-level
+mechanisms for scheduling, mixed-criticality management, and migration planning can operate
+without assuming static task-to-node bindings, enabling a new class of adaptive distributed
+real-time systems.
 %\begin{tikzpicture}[scale=1.1]
 %	
 %	% Axes

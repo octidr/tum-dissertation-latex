@@ -48,8 +48,8 @@ explicitly from the outset.
 
 Mixed-criticality~(MC) systems research is fundamentally concerned with
 \emph{predictability and static assurance}: given a set of tasks with heterogeneous
-safety requirements---expressed through standards such as ISO~26262 Automotive Safety
-Integrity Levels~(ASILs)~\cite{iso26262_2018}---how can a platform guarantee that
+safety requirements, expressed through standards such as ISO~26262 Automotive Safety
+Integrity Levels~(ASILs)~\cite{iso26262_2018}, how can a platform guarantee that
 high-criticality tasks always meet their deadlines, even under worst-case conditions,
 while also providing useful service to lower-criticality workloads? The entire
 analytical apparatus of mixed-criticality scheduling, from Vestal's foundational
@@ -63,8 +63,8 @@ interrupting its execution, serializing its state, transmitting that state over 
 network, and resuming execution in a different environment. Each of these steps
 introduces latency, consumes resources on both the source and destination node, and
 temporarily violates the static assumptions on which schedulability guarantees are
-built. In a system with hard real-time constraints---where a braking control
-function failing its deadline can have fatal consequences---this disruption must be
+built. In a system with hard real-time constraints, where a braking control
+function failing its deadline can have fatal consequences, this disruption must be
 managed with extreme care.
 
 Reconciling these two requirements is non-trivial. It is not sufficient to apply
@@ -88,14 +88,14 @@ Munich~(TUM), conducted within projects including KIA4SM, MaLSAMi, and HaCRoM, h
 established foundational approaches to task migration in real-time distributed systems.
 This includes checkpoint-based migration execution mechanisms and machine-learning-based
 migration planning tools capable of runtime schedulability prediction~\cite{taieb1,
-	utz1,blieninger1}. These contributions form the direct technical basis on which this
-dissertation builds. However, they share a critical limitation: they operate at a
+	utz1,blieninger1}. Some of these contributions form the direct technical basis on which this
+dissertation builds. However, they share some critical limitations: they operate at a
 single, undifferentiated criticality level. All tasks are treated equivalently with
 respect to scheduling priority and migration policy, and no mechanism exists to
 guarantee that high-criticality tasks are privileged during resource contention or
-migration events.
+migration events. Furthermore, so far no actual migration mechanism has been implemented that is compatible with execution on a real-time operating system with minimal overhead and fulfilling criticality constraints. 
 
-This limitation becomes untenable in the context of ECU consolidation for
+These limitations becoms untenable in the context of ECU consolidation for
 safety-critical automotive systems. When an ASIL-D braking function and a
 non-safety-relevant navigation application share the same computing platform and
 the same migration infrastructure, they must be treated fundamentally differently.
@@ -104,15 +104,15 @@ verifiable under all relevant operating conditions~\cite{iso26262_2018}; a migra
 mechanism that might delay or interrupt such a function in the same way as a
 low-criticality task is not compliant with this requirement.
 
-Three concrete open problems define the scope of this dissertation. First, the base
-execution platform must be extended to support mixed-criticality scheduling, providing
+Four concrete open problems define the scope of this dissertation. First, the base
+execution platform must be extended to support dynamic loading of executables with a corresponding checkpoint-restore mechanism. Second, the execution platform must also be extended to support mixed-criticality scheduling, providing
 the runtime separation of concerns required for correct MC behavior before any migration
-mechanism is layered on top. Second, differentiated migration strategies must be
+mechanism is layered on top. Third, differentiated migration strategies must be
 designed for tasks at different criticality levels, each with appropriate timing
 guarantees, state preservation mechanisms, and resource overhead characteristics.
 The fundamental challenge here is that high-criticality migration must be fast,
 bounded, and formally analyzable, while low-criticality migration may trade immediacy
-for efficiency. Third, the interaction between migration events and the MC scheduler
+for efficiency. Fourth, the interaction between migration events and the MC scheduler
 on each node must be carefully accounted for: a task arriving at a destination ECU
 mid-execution has different schedulability implications than a task present since
 system startup, and the platform design must handle this correctly.
@@ -122,8 +122,8 @@ Vehicular edge cloud~(VEC) and Mobile Edge Computing~(MEC) infrastructures place
 compute capacity in proximity to the vehicle, offering supplementary processing
 resources with latencies that may be acceptable for non-safety-critical workloads.
 Whether and how such resources can be incorporated as a third tier in a
-criticality-stratified migration hierarchy---and what formal conditions bound their
-safe use---is an exploratory research question this dissertation investigates.
+criticality-stratified migration hierarchy, and what formal conditions bound their
+safe use, is an exploratory research question this dissertation investigates.
 
 % ============================================================
 \section{Research Questions}
@@ -142,8 +142,8 @@ research questions:
 	varying task load, and how can mixed-criticality scheduling be integrated with a
 	runtime migration execution layer?
 	
-	\item[\textbf{RQ3.}] What migration strategies---at both the operating system and
-	communication levels---are most suitable for high- and low-criticality tasks,
+	\item[\textbf{RQ3.}] What migration strategies, at both the operating system and
+	communication levels, are most suitable for high- and low-criticality tasks,
 	considering the trade-off between minimizing migration latency and optimizing
 	resource utilization?
 	
@@ -164,9 +164,9 @@ empirical evaluation.
 The first stage is \emph{system design}. The architecture of the mixed-criticality
 base platform, the guest task model, and the differentiated migration strategies are
 developed through iterative design informed by the requirements of the target domain.
-Design decisions are driven by the constraints of embedded ECU-class hardware---limited
+Design decisions are driven by the constraints of embedded ECU-class hardware (limited
 memory, deterministic scheduling requirements, and the isolation demands imposed by
-ISO~26262---rather than by theoretical optimality criteria alone.
+ISO~26262) rather than by theoretical optimality criteria alone.
 
 The second stage is \emph{prototypical implementation}. The designed platform is
 realized as a working system on embedded hardware, integrating the Axcan OS
