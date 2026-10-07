@@ -19,7 +19,7 @@ and safety.
 
 A modern high-end vehicle contains upward of 100 Electronic Control Units~(ECUs)
 connected by several kilometers of wiring harness, contributing significantly to
-vehicle weight and manufacturing cost~\cite{vipin2,baunach1}. Historically, ECUs
+vehicle weight and manufacturing cost~\cite{vipin2,baunach2018}. Historically, ECUs
 have been designed with a single-purpose philosophy: each unit is dedicated to one
 functional domain in order to avoid interference between tasks and to simplify safety
 certification~\cite{vipin1,vipin2}. While this approach provides clear isolation and
@@ -35,7 +35,8 @@ These inefficiencies have motivated a broader industry transition toward \emph{E
 number of high-performance, multi-purpose computing platforms~\cite{mckinsey1}. The
 emerging software-defined vehicle~(SDV) concept extends this further, treating vehicle
 functions as software services that can be deployed, updated, and redistributed across
-a flexible hardware architecture at runtime~\cite{sdv2024}. Under this paradigm, the
+a flexible hardware architecture at runtime~\cite{autosar_ap2023,pan2024sdv}. % pan2024sdv added: IEEE Access 2024, Pan/Lienkamp/Knoll et al., DOI 10.1109/ACCESS.2024.3512002. Peer-reviewed open-access journal paper on SDV from TU Munich group.
+Under this paradigm, the
 static binding between a function and a specific ECU is relaxed, and the ability to
 dynamically distribute and redistribute tasks at runtime becomes a key enabler of both
 resource efficiency and fault tolerance.

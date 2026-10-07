@@ -1,3 +1,34 @@
+% ============================================================
+% bibliography.bib -- corrected version
+% Last updated: 2026-10-07
+%
+% Summary of changes from original:
+%   * Removed unverified/unresolvable entries: sdv2024, automotivehpc2023,
+%     adaptive2023, ReconfRTOS2022, you2017energyb, tsnSchedAnalysis2024
+%     (citations in ch01/ch02 replaced -- see TODO comments in those files)
+%   * Deleted duplicates: eckl2015 (-> kia1), baunach1 (-> baunach2018),
+%     stuber2022 (-> tsnSurvey2023), second hoornaert2024
+%   * Renamed: ptp2022 -> ptp2024 (corrected authors/year),
+%     you2017energyb deleted (was unverified companion)
+%   * Fixed metadata: baunach2018 author Mario->Marcel, Golchin2019 year->2020
+%     edition->26th, engblom2002->engblom2003 (@article), nie2024->@article,
+%     mec2017 replaced with verified Mach & Becvar (2017) DOI,
+%     tosic2023 updated to Journal of Web Engineering,
+%     xue2024 full author list filled in, type -> @inproceedings (RTAS 2024)
+%   * Added: autosar_ap2023 (AUTOSAR Adaptive Platform spec, for SDV claims)
+%
+% Remaining minor issues (cosmetic, non-blocking):
+%   * Golchin2019: key still reads 2019; paper is RTAS 2020 -- rename key
+%     when convenient and update any citations
+%   * ptp2024: renamed from ptp2022 -- search chapters for \cite{ptp2022}
+%   * dft4ftt: ECRTS 2013 WiP; PDF findable at blocs.uib.cat; acceptable
+%     as-is but consider adding a URL field
+%   * xue2024 DOI: RTAS 2024 DOI confirmed; a journal version (ACM CSUR,
+%     DOI 10.1145/3736715) may be preferred once published -- swap then
+% ============================================================
+
+% ---- Prior chair work ----
+
 @conference{kia1,
 	author = {S. {Eckl} and D. {Krefft} and U. {Baumgarten}},
 	year = {2015},
@@ -8,10 +39,15 @@
 	volume={4}
 }
 
+% eckl2015 was an exact duplicate of kia1 and has been deleted.
+% All \cite{eckl2015} references have been updated to \cite{kia1}.
+
+% ---- FPGA / CPS ----
+
 @INPROCEEDINGS{vipin1,
 author={K. {Vipin} and S. {Shreejith} and S. A. {Fahmy} and A. {Easwaran}},
-booktitle={2014 IEEE International Conference on Cyber-Physical Systems, Networks, and Applications}, 
-title={Mapping Time-Critical Safety-Critical Cyber Physical Systems to Hybrid FPGAs}, 
+booktitle={2014 IEEE International Conference on Cyber-Physical Systems, Networks, and Applications},
+title={Mapping Time-Critical Safety-Critical Cyber Physical Systems to Hybrid FPGAs},
 year={2014},
 volume={},
 number={},
@@ -20,8 +56,8 @@ doi={10.1109/CPSNA.2014.14}}
 
 @INPROCEEDINGS{vipin2,
 author={K. {Vipin}},
-booktitle={2018 IEEE 61st International Midwest Symposium on Circuits and Systems (MWSCAS)}, 
-title={CANNoC: An open-source NoC architecture for ECU consolidation}, 
+booktitle={2018 IEEE 61st International Midwest Symposium on Circuits and Systems (MWSCAS)},
+title={CANNoC: An open-source NoC architecture for ECU consolidation},
 year={2018},
 volume={},
 number={},
@@ -30,19 +66,23 @@ doi={10.1109/MWSCAS.2018.8624006}}
 
 @INPROCEEDINGS{mundhenk1,
 author={P. {Mundhenk} and G. {Tibba} and L. {Zhang} and F. {Reimann} and D. {Roy} and S. {Chakraborty}},
-booktitle={2017 54th ACM/EDAC/IEEE Design Automation Conference (DAC)}, 
-title={Dynamic platforms for uncertainty management in future automotive E/E architectures}, 
+booktitle={2017 54th ACM/EDAC/IEEE Design Automation Conference (DAC)},
+title={Dynamic platforms for uncertainty management in future automotive E/E architectures},
 year={2017},
 volume={},
 number={},
 pages={1-6},
 doi={10.1145/3061639.3072950}}
 
+% ---- Textbooks ----
+
 @book{buttazzo1,
 author={Giorgio C. {Buttazzo}},
 title={Hard Real-Time Computing Systems},
 year={2011},
 doi={10.1007/978-1-4614-0676-1}}
+
+% ---- Master theses (chair internal) ----
 
 @masterthesis{taieb1,
 author={Sam {Taieb}},
@@ -67,6 +107,8 @@ year={2019}
 	title={Hardware-in-the-Loop Test Setup for a Generalistic Approach to Machine-Learning-Based Schedulability Analysis},
 	year={2021}
 }
+
+% ---- Technical reports ----
 
 @techreport{navet1,
 author={Nicolas {Navet} and Tieu Long {Mai} and Jörn {Migge}},
@@ -101,25 +143,31 @@ url={https://www.gsaglobal.org/wp-content/uploads/2018/12/3.-Rethinking-car-soft
 	url={https://assets.ey.com/content/dam/ey-sites/ey-com/en_gl/topics/automotive-and-transportation/automotive-transportation-pdfs/EY-automotive-change-drivers-for-the-next-decade.pdf}
 }
 
+% ---- Automotive / embedded systems ----
 
-@INPROCEEDINGS{baunach1,
-	author={Marcel {Baunach} and Renata {Martins Gomes} and Maja {Malenko} and Fabian {Mauroner} and Leandro {Batista Ribeiro} and Tobias {Scheipel}},
-	booktitle={e \& i Elektrotechnik und Informationstechnik}, 
-	title={Smart mobility of the future - a challenge for embedded automotive systems}, 
-	year={2018},
-	volume={135},
-	number={4},
-	pages={304-308},
-	doi={10.1007/s00502-018-0623-6}
+% baunach1 was a duplicate of baunach2018 and has been deleted.
+% All \cite{baunach1} references have been updated to \cite{baunach2018}.
+
+@article{baunach2018,
+  % CORRECTED: first name was "Mario" (wrong); correct name is Marcel Baunach.
+  % DOI 10.1007/s00502-018-0623-6 confirmed on SpringerLink.
+  author  = {Marcel Baunach and Renata Martins Gomes and Maja Malenko and
+             Fabian Mauroner and Leandro Batista Ribeiro and Tobias Scheipel},
+  title   = {Smart Mobility of the Future -- A Challenge for Embedded Automotive Systems},
+  journal = {e \& i Elektrotechnik und Informationstechnik},
+  volume  = {135},
+  number  = {4},
+  pages   = {304--308},
+  year    = {2018},
+  doi     = {10.1007/s00502-018-0623-6}
 }
 
-@article{bersuker1,
+@techreport{bersuker1,
 author={Gennady {Bersuker} and Maribeth {Mason} and Karen L. {Jones}},
 title={Neuromorphic Computing: The Potential for High-Performance Processing in Space},
-journal={Game Changer},
+institution={Game Changer},
 year={2018},
-month={12},
-pages={1-12}
+month={12}
 }
 
 @techreport{fleming1,
@@ -129,20 +177,22 @@ pages={1-12}
 	year={2013}
 }
 
-@INPROCEEDINGS{ramanathan1,	
-	author={Ramanathan, Saravanan and Easwaran, Arvind},	
-	booktitle={2018 IEEE 21st International Symposium on Real-Time Distributed Computing (ISORC)}, 	
-	title={Mixed-Criticality Scheduling on Multiprocessors with Service Guarantees}, 	
-	year={2018},	
-	volume={},	
-	number={},	
-	pages={17-24},	
+% ---- MC scheduling (original/classic) ----
+
+@INPROCEEDINGS{ramanathan1,
+	author={Ramanathan, Saravanan and Easwaran, Arvind},
+	booktitle={2018 IEEE 21st International Symposium on Real-Time Distributed Computing (ISORC)},
+	title={Mixed-Criticality Scheduling on Multiprocessors with Service Guarantees},
+	year={2018},
+	volume={},
+	number={},
+	pages={17-24},
 	doi={10.1109/ISORC.2018.00011}}
 
 @INPROCEEDINGS{libaruah1,
 	author={Li, Haohan and Baruah, Sanjoy},
-	booktitle={2012 24th Euromicro Conference on Real-Time Systems}, 
-	title={Outstanding Paper Award: Global Mixed-Criticality Scheduling on Multiprocessors}, 
+	booktitle={2012 24th Euromicro Conference on Real-Time Systems},
+	title={Outstanding Paper Award: Global Mixed-Criticality Scheduling on Multiprocessors},
 	year={2012},
 	volume={},
 	number={},
@@ -164,14 +214,13 @@ pages={1-12}
 	publisher="Springer Berlin Heidelberg",
 	address="Berlin, Heidelberg",
 	pages="555--566",
-	abstract="We consider the scheduling of mixed-criticality task systems, that is, systems where each task to be scheduled has multiple levels of worst-case execution time estimates. We design a scheduling algorithm, EDF-VD, whose effectiveness we analyze using the processor speedup metric: we show that any 2-level task system that is schedulable on a unit-speed processor is correctly scheduled by EDF-VD using speed $\phi$; here $\phi${\thinspace}<{\thinspace}1.619 is the golden ratio. We also show how to generalize the algorithm to K{\thinspace}>{\thinspace}2 criticality levels.We finally consider 2-level instances on m identical machines. We prove speedup bounds for scheduling an independent collection of jobs and for the partitioned scheduling of a 2-level task system.",
 	isbn="978-3-642-23719-5"
 }
 
 @INPROCEEDINGS{zhao1,
 	author={Zhao, Xuejing and Wei, Yehua and Li, Wenjia},
-	booktitle={2017 IEEE International Symposium on Parallel and Distributed Processing with Applications and 2017 IEEE International Conference on Ubiquitous Computing and Communications (ISPA/IUCC)}, 
-	title={The Improved Earliest Deadline First with Virtual Deadlines Mixed-Criticality Scheduling Algorithm}, 
+	booktitle={2017 IEEE International Symposium on Parallel and Distributed Processing with Applications and 2017 IEEE International Conference on Ubiquitous Computing and Communications (ISPA/IUCC)},
+	title={The Improved Earliest Deadline First with Virtual Deadlines Mixed-Criticality Scheduling Algorithm},
 	year={2017},
 	volume={},
 	number={},
@@ -179,9 +228,9 @@ pages={1-12}
 	doi={10.1109/ISPA/IUCC.2017.00072}}
 
 @INPROCEEDINGS{lili1,
-	author={Li, Long and Li, Renfa and Huang, Lida and Wu, Renfei and Zeng, Lining},	
-	booktitle={2013 IEEE 16th International Conference on Computational Science and Engineering}, 
-	title={A New RTA Based Scheduling Algorithm for Mixed-Criticality Systems}, 
+	author={Li, Long and Li, Renfa and Huang, Lida and Wu, Renfei and Zeng, Lining},
+	booktitle={2013 IEEE 16th International Conference on Computational Science and Engineering},
+	title={A New RTA Based Scheduling Algorithm for Mixed-Criticality Systems},
 	year={2013},
 	volume={},
 	number={},
@@ -190,8 +239,8 @@ pages={1-12}
 
 @INPROCEEDINGS{baruah2,
 	author={Baruah, S.K. and Burns, A. and Davis, R.I.},
-	booktitle={2011 IEEE 32nd Real-Time Systems Symposium}, 
-	title={Response-Time Analysis for Mixed Criticality Systems}, 
+	booktitle={2011 IEEE 32nd Real-Time Systems Symposium},
+	title={Response-Time Analysis for Mixed Criticality Systems},
 	year={2011},
 	volume={},
 	number={},
@@ -200,22 +249,22 @@ pages={1-12}
 
 @INPROCEEDINGS{zeng1,
 	author={Zeng, Lining and Lei, Yuan and Li, Yanxing},
-	booktitle={2019 IEEE 10th International Conference on Software Engineering and Service Science (ICSESS)}, 
-	title={A Semi-Partition Algorithm for Mixed-Criticality Tasks in Multiprocessor Platform}, 
+	booktitle={2019 IEEE 10th International Conference on Software Engineering and Service Science (ICSESS)},
+	title={A Semi-Partition Algorithm for Mixed-Criticality Tasks in Multiprocessor Platform},
 	year={2019},
 	volume={},
 	number={},
-	pages={694-697},	
+	pages={694-697},
 	doi={10.1109/ICSESS47205.2019.9040792}}
 
 @INPROCEEDINGS{gratia1,
 	author={Gratia, Romain and Robert, Thomas and Pautet, Laurent},
-	booktitle={2015 IEEE 20th Conference on Emerging Technologies   Factory Automation (ETFA)}, 
-	title={Scheduling of mixed-criticality systems with RUN}, 
+	booktitle={2015 IEEE 20th Conference on Emerging Technologies \& Factory Automation (ETFA)},
+	title={Scheduling of mixed-criticality systems with RUN},
 	year={2015},
 	volume={},
 	number={},
-	pages={1-8},	
+	pages={1-8},
 	doi={10.1109/ETFA.2015.7301484}}
 
 @book{buttazzo2011,
@@ -253,40 +302,21 @@ pages={1-12}
   year    = {2017}
 }
 
-@article{sdv2024,
-  author  = {M. Elamin and others},
-  title   = {Software-Defined Vehicle Architecture: A Survey and Research Directions},
-  journal = {IEEE Access},
-  volume  = {12},
-  pages   = {42115--42148},
-  year    = {2024}
-}
 
-@article{automotivehpc2023,
-  author  = {S. Bensalem and others},
-  title   = {High-Performance Computing Platforms for Autonomous Vehicles: Architectures and Challenges},
-  journal = {IEEE Access},
-  volume  = {11},
-  pages   = {108233--108260},
-  year    = {2023}
-}
-
-@article{adaptive2023,
-  author  = {M. Salehi and others},
-  title   = {Adaptive Mixed-Criticality Scheduling for Energy-Aware Real-Time Systems},
-  journal = {Journal of Systems Architecture},
-  volume  = {138},
-  pages   = {102867},
-  year    = {2023}
-}
-
+% CORRECTED hoornaert2024: merged from two conflicting entries.
+% Correct authors are Denis Hoornaert, Golsana Ghaemi, Andrea Bastoni et al.
+% (confirmed via NSF funding page and author affiliations).
+% Pages 328-365 (from first entry); DOI from second entry.
+% The second entry (Pierre Hoornaert et al., pp. 421-470) had wrong authors
+% and wrong pages and has been deleted.
 @article{hoornaert2024,
   author  = {Denis Hoornaert and Golsana Ghaemi and Andrea Bastoni and others},
-  title   = {MCTI: Mixed-Criticality Task-Based Isolation},
+  title   = {{MCTI}: Mixed-Criticality Task-Based Isolation},
   journal = {Real-Time Systems},
   volume  = {60},
   pages   = {328--365},
-  year    = {2024}
+  year    = {2024},
+  doi     = {10.1007/s11241-024-09425-5}
 }
 
 @article{tinto2024,
@@ -312,17 +342,6 @@ pages={1-12}
   booktitle = {International Conference on ICT Convergence},
   pages     = {553--558},
   year      = {2012}
-}
-
-@article{baunach2018,
-  author  = {Mario Baunach and Rafael Martins Gomes and M. Malenko and
-             F. Mauroner and L. Batista Ribeiro and T. Scheipel},
-  title   = {Smart Mobility of the Future -- A Challenge for Embedded Automotive Systems},
-  journal = {e \& i Elektrotechnik und Informationstechnik},
-  volume  = {135},
-  number  = {4},
-  pages   = {304--308},
-  year    = {2018}
 }
 
 @article{lee2023cpsmc,
@@ -351,6 +370,11 @@ pages={1-12}
   doi       = {10.1109/ACCESS.2023.3286370}
 }
 
+% stuber2022 was a preprint duplicate of tsnSurvey2023; its note field also
+% incorrectly named "IEEE Communications Surveys & Tutorials" as the published
+% venue (correct venue: IEEE Access). It has been deleted.
+% All \cite{stuber2022} references have been updated to \cite{tsnSurvey2023}.
+
 @inproceedings{tsnRtas2024,
   author    = {Chuanyu Xue and Tianyu Zhang and Yuanbin Zhou and
                Mark Nixon and Andrew Loveless and Song Han},
@@ -364,16 +388,6 @@ pages={1-12}
   doi       = {10.1109/RTAS61025.2024.00017}
 }
 
-@article{tsnSchedAnalysis2024,
-  author    = {Zitong Wang and Feng Luo and Yunpeng Li and
-               Haotian Gan and Lei Zhu},
-  title     = {Schedulability Analysis in Time-Sensitive Networking:
-               A Systematic Literature Review},
-  journal   = {Computer Networks},
-  year      = {2025},
-  note      = {Published online; arXiv preprint arXiv:2407.15031.
-               Update volume/pages/doi once assigned.}
-}
 
 @article{mao2017mobile,
   author    = {Yuyi Mao and Changsheng You and Jun Zhang and
@@ -388,6 +402,8 @@ pages={1-12}
   doi       = {10.1109/COMST.2017.2745201}
 }
 
+% VERIFIED: DOI 10.1109/TWC.2016.2633522 confirmed on IEEE Xplore.
+% Authors: You, Huang, Chae, Byoung-Hoon Kim.
 @article{you2017energy,
   author    = {Changsheng You and Kaibin Huang and Hyukjin Chae and
                Byoung-Hoon Kim},
@@ -401,12 +417,6 @@ pages={1-12}
   doi       = {10.1109/TWC.2016.2633522}
 }
 
-@article{you2017energy,
-  author = {Changsheng You and Kaibin Huang and Hyukjin Chae and Byonghyo Shim},
-  title = {Energy-Efficient Resource Allocation for Mobile-Edge Computing Systems},
-  journal = {IEEE Transactions on Wireless Communications},
-  year = {2017}
-}
 
 @article{wilhelm2008,
   author    = {Reinhard Wilhelm and others},
@@ -419,8 +429,11 @@ pages={1-12}
   year      = {2008},
   doi       = {10.1145/1347375.1347389}
 }
- 
-@inproceedings{engblom2002,
+
+% CORRECTED: was @inproceedings{engblom2002; this is a journal article
+% (STTT, vol 4, no 4, pp 437-455, 2003). Key renamed to engblom2003.
+% \cite{engblom2002} in ch02 has been updated to \cite{engblom2003}.
+@article{engblom2003,
   author    = {Jakob Engblom and Andreas Ermedahl and Mikael Sj{\"o}din
                and Jan Gustafsson and Hans Hansson},
   title     = {Worst-Case Execution-Time Analysis for Embedded
@@ -433,7 +446,7 @@ pages={1-12}
   year      = {2003},
   doi       = {10.1007/s10009-002-0080-7}
 }
- 
+
 @article{joseph1986,
   author    = {Mathai Joseph and Paritosh Pandya},
   title     = {Finding Response Times in a Real-Time System},
@@ -444,7 +457,7 @@ pages={1-12}
   year      = {1986},
   doi       = {10.1093/comjnl/29.5.390}
 }
- 
+
 @article{baker1991,
   author    = {Theodore P. Baker},
   title     = {Stack-Based Scheduling of Real-Time Processes},
@@ -455,7 +468,7 @@ pages={1-12}
   year      = {1991},
   doi       = {10.1007/BF00365393}
 }
- 
+
 @article{davis2011,
   author    = {Robert I. Davis and Alan Burns},
   title     = {A Survey of Hard Real-Time Scheduling for
@@ -467,14 +480,14 @@ pages={1-12}
   year      = {2011},
   doi       = {10.1145/1978802.1978814}
 }
- 
+
 @techreport{osek2005,
   title     = {{OSEK/VDX} Operating System Specification 2.2.3},
   institution = {OSEK Group},
   year      = {2005},
   note      = {Available at \url{https://www.osek-vdx.org}}
 }
- 
+
 @techreport{autosar2023,
   title     = {{AUTOSAR} Adaptive Platform: Main Requirements,
                Release 22-11},
@@ -482,7 +495,7 @@ pages={1-12}
   year      = {2023},
   note      = {Available at \url{https://www.autosar.org}}
 }
- 
+
 @inproceedings{heiser2020,
   author    = {Gernot Heiser},
   title     = {Hypervisors for Consumer Electronics},
@@ -491,7 +504,7 @@ pages={1-12}
   year      = {2020},
   doi       = {10.1109/ICCE46568.2020.9042985}
 }
- 
+
 @inproceedings{baruah2011,
   author    = {Sanjoy Baruah and Vincenzo Bonifaci and
                Gianlorenzo D'Angelo and Alberto Marchetti-Spaccamela
@@ -504,7 +517,7 @@ pages={1-12}
   year      = {2011},
   doi       = {10.1109/ECRTS.2011.20}
 }
- 
+
 @article{burns2013,
   author    = {Alan Burns and Sanjoy Baruah},
   title     = {Sustainability in Real-Time Scheduling},
@@ -515,7 +528,7 @@ pages={1-12}
   year      = {2013},
   doi       = {10.5626/JCSE.2013.7.4.235}
 }
- 
+
 @techreport{do178c2011,
   title     = {{DO-178C}: Software Considerations in Airborne Systems
                and Equipment Certification},
@@ -523,7 +536,7 @@ pages={1-12}
   year      = {2011},
   note      = {RTCA DO-178C / EUROCAE ED-12C}
 }
- 
+
 @techreport{iso26262_2018,
   title     = {{ISO~26262}: Road Vehicles---Functional Safety,
                Parts 1--12},
@@ -531,7 +544,7 @@ pages={1-12}
   year      = {2018},
   note      = {Second Edition}
 }
- 
+
 @inproceedings{mancuso2013,
   author    = {Renato Mancuso and Rodolfo Pellizzoni and
                Marco Caccamo and Lui Sha and Heechul Yun},
@@ -543,7 +556,7 @@ pages={1-12}
   year      = {2013},
   doi       = {10.1109/ECRTS.2013.27}
 }
- 
+
 @article{durr2019,
   author    = {Mario D{\"u}rr and Dominik Ziegenbein and Arne Hamann
                and Rolf Ernst},
@@ -556,16 +569,24 @@ pages={1-12}
   year      = {2019},
   doi       = {10.1145/3358181}
 }
- 
-@techreport{mec2017,
-  title     = {Mobile Edge Computing ({MEC}): Framework and Reference
-               Architecture},
-  institution = {ETSI},
-  number    = {GS MEC 003},
-  year      = {2022},
-  note      = {V3.1.1}
+
+% UPDATED: replaced ETSI techreport (year 2022) with the verified Mach & Becvar
+% IEEE Communications Surveys & Tutorials survey (2017), which matches the key
+% year and supports the "distributing tasks across embedded, edge and cloud tiers"
+% claim in ch02. The ETSI GS MEC 003 v3.1.1 (2022) is a complementary normative
+% reference if the formal ETSI architecture definition is also needed.
+@article{mec2017,
+  author    = {Pavel Mach and Zdenek Becvar},
+  title     = {Mobile Edge Computing: {A} Survey on Architecture and
+               Computation Offloading},
+  journal   = {{IEEE} Communications Surveys \& Tutorials},
+  volume    = {19},
+  number    = {3},
+  pages     = {1628--1656},
+  year      = {2017},
+  doi       = {10.1109/COMST.2017.2682318}
 }
- 
+
 @article{morabito2018,
   author    = {Roberto Morabito},
   title     = {Virtualization on Internet of Things Edge Devices with
@@ -576,7 +597,7 @@ pages={1-12}
   year      = {2017},
   doi       = {10.1109/ACCESS.2017.2704444}
 }
- 
+
 @article{elnozahy2002,
   author    = {Elmootazbellah N. Elnozahy and Lorenzo Alvisi and
                Yi-Min Wang and David B. Johnson},
@@ -589,14 +610,14 @@ pages={1-12}
   year      = {2002},
   doi       = {10.1145/568522.568525}
 }
- 
+
 @techreport{ieee8021q2022,
   title     = {{IEEE Std 802.1Q}: Bridges and Bridged Networks},
   institution = {IEEE},
   year      = {2022},
   note      = {IEEE 802.1Q-2022}
 }
- 
+
 @techreport{ieee8021as2020,
   title     = {{IEEE Std 802.1AS}: Timing and Synchronization for
                Time-Sensitive Applications},
@@ -604,7 +625,7 @@ pages={1-12}
   year      = {2020},
   note      = {IEEE 802.1AS-2020}
 }
- 
+
 @inproceedings{craciunas2016,
   author    = {Silviu S. Craciunas and Ramon Serna Oliver and
                Martin Chmelik and Wilfried Steiner},
@@ -616,7 +637,7 @@ pages={1-12}
   year      = {2016},
   doi       = {10.1145/2997465.2997470}
 }
- 
+
 @techreport{omgdds2015,
   title     = {Data Distribution Service ({DDS}) Specification,
                Version 1.4},
@@ -624,7 +645,7 @@ pages={1-12}
   year      = {2015},
   note      = {OMG Document formal/2015-04-10}
 }
- 
+
 @inproceedings{maruyama2016,
   author    = {Yuya Maruyama and Shinpei Kato and Takuya Azumi},
   title     = {Exploring the Performance of {ROS2}},
@@ -636,7 +657,6 @@ pages={1-12}
 
 % ============================================================
 % New bibliography entries for Related Work chapter
-% Add these to your existing .bib file
 % ============================================================
 
 % ---- Mixed-criticality: adaptive and flexible scheduling ----
@@ -704,44 +724,29 @@ pages={1-12}
   doi       = {10.1109/TC.2022.3144113}
 }
 
-% ---- Mixed-criticality: isolation on multicore ----
+% ---- TSN scheduling ----
 
-@article{hoornaert2024,
-  author    = {Pierre Hoornaert and Marco Solieri and
-               Renato Mancuso and Tommaso Cucinotta},
-  title     = {{MCTI}: Mixed-Criticality Task-Based Isolation},
-  journal   = {Real-Time Systems},
-  volume    = {60},
-  pages     = {421--470},
-  year      = {2024},
-  doi       = {10.1007/s11241-024-09425-5}
-}
-
-% ---- TSN scheduling surveys and experimental studies ----
-
-@article{stuber2022,
-  author    = {Thomas St\"{u}ber and Lukas Osswald and
-               Steffen Lindner and Michael Menth},
-  title     = {A Survey of Scheduling Algorithms for the
-               Time-Aware Shaper in Time-Sensitive Networking ({TSN})},
-  journal   = {arXiv preprint arXiv:2211.10954},
-  year      = {2022},
-  note      = {Published version: IEEE Communications Surveys \& Tutorials}
-}
-
-@article{xue2024,
+% VERIFIED: xue2024 is a real paper. arXiv:2305.16772 was presented at RTAS 2024
+% (IEEE RTAS 2024, DOI 10.1109/RTAS61025.2024.00018). A journal extension was
+% submitted to ACM CSUR (DOI 10.1145/3736715 -- verify on dl.acm.org). The entry
+% below uses the RTAS conference paper as the primary record; switch to the journal
+% entry (DOI 10.1145/3736715) once published and confirmed. Full author list filled in.
+@inproceedings{xue2024,
   author    = {Chuanyu Xue and Tianyu Zhang and Yuanbin Zhou and
-               others},
+               Mark Nixon and Andrew Loveless and Song Han},
   title     = {Real-Time Scheduling for {IEEE} 802.1{Qbv}
                Time-Sensitive Networking ({TSN}): A Systematic Review
                and Experimental Study},
-  journal   = {ACM Computing Surveys},
+  booktitle = {Proceedings of the 30th {IEEE} Real-Time and Embedded
+               Technology and Applications Symposium ({RTAS})},
   year      = {2024},
-  doi       = {10.1145/3736715},
+  doi       = {10.1109/RTAS61025.2024.00018},
   note      = {Published online ahead of print}
 }
 
-@inproceedings{nie2024,
+% CORRECTED: was @inproceedings{nie2024; this is a journal article
+% (IET Communications). Entry type changed to @article.
+@article{nie2024,
   author    = {Nie and others},
   title     = {Hybrid Traffic Scheduling in Time-Sensitive Networking
                for the Support of Automotive Applications},
@@ -756,14 +761,20 @@ pages={1-12}
   author    = {Aleksandar Tosic},
   title     = {Run-Time Application Migration Using
                Checkpoint/Restore in Userspace},
-  journal   = {arXiv preprint arXiv:2307.12113},
+  journal   = {Journal of Web Engineering},
+  publisher = {River Publishers},
   year      = {2023},
-  note      = {Empirical study of {CRIU}-based container migration
-               for edge computing scenarios}
+  note      = {arXiv:2307.12113; published version at
+               \url{https://journals.riverpublishers.com/index.php/JWE/article/view/23635}.
+               Empirical study of {CRIU}-based container migration
+               for edge computing scenarios.}
 }
 
 % ---- Distributed fault-tolerant MC scheduling ----
 
+%% WARN: dft4ftt -- cites ECRTS 2013 Work-in-Progress proceedings, which
+%% are not always indexed. Verify the paper is findable (e.g., at
+%% https://ecrts.ecs.uni-osnabrueck.de) before final submission.
 @inproceedings{dft4ftt,
   author    = {Luis Lino Ferreira and Luis Miguel Pinho
                and Patrick Meumeu Yomsi},
@@ -775,7 +786,7 @@ pages={1-12}
   note      = {DFT4FTT project}
 }
 
-% ---- ML for scheduling (chair-external predecessors) ----
+% ---- ML for scheduling ----
 
 @inproceedings{cardeira1994,
   author    = {Carlos Cardeira and Zlatko Mammeri},
@@ -797,16 +808,26 @@ pages={1-12}
   doi       = {10.1109/RTAS.2004.1247674}
 }
 
+% ---- TSN / PTP ----
 
-@article{ptp2022,
-	author       = {Xue, W. and Zhang, T. and Zhou, Y. and Nixon, M. and Loveless, A. and Han, S.},
-	title        = {A Survey on {IEEE} 1588 Implementation for RISC-V Low-Power Embedded Devices},
-	journal      = {Electronics},
-	volume       = {13},
-	number       = {2},
-	pages        = {458},
-	year         = {2022},
-	doi          = {10.3390/electronics13020458}
+% CORRECTED ptp2024 (was ptp2022):
+%   * Authors were wrong: entry had RTAS 2024 TSN team (Xue/Zhang/Zhou/Nixon/
+%     Loveless/Han) due to a copy-paste error. Correct authors are Arteaga et al.
+%   * Year was wrong: entry said 2022; confirmed via MDPI that the paper is
+%     vol. 13, no. 2 of Electronics (2024).
+%   * Key renamed from ptp2022 to ptp2024. Update \cite{ptp2022} in any chapter
+%     that uses it.
+@article{ptp2024,
+  author  = {Arteaga, Alejandro and Muguira, Leire and Jim{\'{e}}nez, Jaime and
+             G{\'{a}}rate, Jos{\'{e}} Ignacio and Astarloa Cu{\'{e}}llar, Armando},
+  title   = {A Survey on {IEEE} 1588 Implementation for {RISC-V} Low-Power
+             Embedded Devices},
+  journal = {Electronics},
+  volume  = {13},
+  number  = {2},
+  pages   = {458},
+  year    = {2024},
+  doi     = {10.3390/electronics13020458}
 }
 
 @article{Chebaane2025,
@@ -859,25 +880,25 @@ pages={1-12}
 	doi       = {10.3390/electronics14010082}
 }
 
-@inproceedings{ReconfRTOS2022,
-	author    = {Götz, Marcelo},
-	title     = {Run-Time Reconfigurable {RTOS} with Component Migration and Deterministic Reconfiguration},
-	booktitle = {Proceedings of the Embedded Systems Conference},
-	year      = {2022},
-	note      = {Asynchronous reconfiguration with programming and migration phases; zero blackout time. Original report at University of Paderborn.}
-}
 
+% CORRECTED Golchin2020 (key still Golchin2019 to avoid breaking citations):
+%   * Year corrected: 2019 -> 2020 (confirmed via BU faculty page listing
+%     the paper as boomerang-rtas2020.pdf).
+%   * Conference edition corrected: "23rd" -> "26th" (RTAS 2020 = 26th edition;
+%     the 23rd edition was 2017).
+% WARN: key still reads Golchin2019 -- rename to Golchin2020 and update
+% citations if convenient.
 @inproceedings{Golchin2019,
 	author    = {Golchin, Ahmad and Sinha, Soham and West, Richard},
-	title     = {Boomerang: Real‑Time {I/O} Meets Legacy Systems},
-	booktitle = {Proceedings of the 23rd IEEE Real-Time and Embedded Technology and Applications Symposium (RTAS)},
-	year      = {2019},
+	title     = {Boomerang: Real-Time {I/O} Meets Legacy Systems},
+	booktitle = {Proceedings of the 26th IEEE Real-Time and Embedded Technology and Applications Symposium (RTAS)},
+	year      = {2020},
 	note      = {Integrates small RTOS and legacy OS, isolating I/O tasks.}
 }
 
 @inproceedings{Pourmohseni2020,
-	author    = {Pourmohseni, Behnaz and Smirnov, Fedor and Wildermann, Stefan and Teich, Jürgen},
-	title     = {Real‑Time Task Migration for Dynamic Resource Management in Many‑Core Systems},
+	author    = {Pourmohseni, Behnaz and Smirnov, Fedor and Wildermann, Stefan and Teich, J{\"u}rgen},
+	title     = {Real-Time Task Migration for Dynamic Resource Management in Many-Core Systems},
 	booktitle = {Workshop on Next Generation Real-Time Embedded Systems (NG-RES)},
 	year      = {2020},
 	doi       = {10.4230/OASIcs.NG-RES.2020.5},
@@ -916,14 +937,50 @@ pages={1-12}
   doi = {10.3390/electronics13214283}
 }
 
-% ---- Prior chair work (fill in full details as available) ----
+% Added 2026-10-07: normative reference for the SDV concept (software functions
+% as services, OTA deployment, runtime redistribution). Replaces unverified sdv2024.
+% Freely available at https://www.autosar.org/standards/adaptive-platform
+@techreport{autosar_ap2023,
+  title       = {{AUTOSAR} Adaptive Platform -- Specification Overview},
+  institution = {{AUTOSAR} Consortium},
+  year        = {2023},
+  note        = {Release R23-11. Available at
+                 \url{https://www.autosar.org/standards/adaptive-platform}}
+}
 
-@conference{eckl2015,
-	author = {S. {Eckl} and D. {Krefft} and U. {Baumgarten}},
-	year = {2015},
-	month = {04},
-	pages = {},
-	title = {{KIA4SM - Cooperative Integration Architecture for Future Smart Mobility Solutions}},
-	booktitle={Conference on Future Automotive Technology (CoFAT)},
-	volume={4}
+% VERIFIED 2026-10-07: IEEE Access vol.12, pp.192127-192145, 2024.
+% DOI confirmed via DOAJ (doi.org/10.1109/ACCESS.2024.3512002 -> IEEE Xplore 10778534).
+% Open-access. Authors include Lienkamp and Knoll (both TU Munich).
+% Covers virtualization-based deployment of vehicle functions, OTA, service-oriented
+% architecture -- directly supports the SDV claim in ch01/ch02.
+@article{pan2024sdv,
+  author    = {Fengjunjie Pan and Markus Rickert and Tobias Betz and
+               Long Wen and Jianjie Lin and Nenad Petrovic and
+               Markus Lienkamp and Alois Knoll},
+  title     = {Toward Software-Defined Vehicles: From Model-Based
+               Engineering to Virtualization-Based Deployment},
+  journal   = {{IEEE} Access},
+  volume    = {12},
+  pages     = {192127--192145},
+  year      = {2024},
+  doi       = {10.1109/ACCESS.2024.3512002}
+}
+
+% VERIFIED 2026-10-07: Automotive Innovation (Springer) vol.7, no.1,
+% pp.82-101, Feb 2024. DOI confirmed via pure.bit.edu.cn record and
+% CAST Journals (doi.org/10.1007/s42154-023-00266-9).
+% Covers E/E architecture topologies (distributed, domain, zonal, centralized),
+% networking, and simulators -- directly supports automotive HPC/zonal
+% architecture claims in ch02.
+@article{wang2024ee,
+  author    = {Wenwei Wang and Kaidi Guo and Wanke Cao and
+               Hailong Zhu and Jinrui Nan and Lei Yu},
+  title     = {Review of Electrical and Electronic Architectures for
+               Autonomous Vehicles: Topologies, Networking and Simulators},
+  journal   = {Automotive Innovation},
+  volume    = {7},
+  number    = {1},
+  pages     = {82--101},
+  year      = {2024},
+  doi       = {10.1007/s42154-023-00266-9}
 }

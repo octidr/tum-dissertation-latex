@@ -60,7 +60,8 @@ Modern cyber-physical systems such as automotive platforms,
 industrial controllers, robotics systems, and autonomous
 vehicles increasingly depend on strict timing guarantees while
 simultaneously requiring higher computational flexibility and
-adaptability~\cite{baunach2018,sdv2024}. This combination
+adaptability~\cite{baunach2018,autosar_ap2023,pan2024sdv}. % pan2024sdv added: IEEE Access 2024, Pan/Lienkamp/Knoll et al., DOI 10.1109/ACCESS.2024.3512002.
+This combination
 introduces significant challenges for system design and
 resource management.
 
@@ -331,7 +332,7 @@ challenge in the design of mixed-criticality platforms.
 
 Modern mixed-criticality systems increasingly explore adaptive
 resource management techniques in order to improve efficiency
-while preserving timing guarantees~\cite{adaptive2023}.
+while preserving timing guarantees~\cite{burns2017}. % NOTE: adaptive2023 removed (unverified). burns2017 (Burns & Davis ACM CSUR 2017) is the correct citation here. The 2022 "updated survey" at whiterose.ac.uk/183619 is a 97-page non-peer-reviewed technical review (13th edition), not a journal paper -- burns2017 is the appropriate reference.
 In the standard mixed-criticality scheduling model, the
 system can transition between a low-criticality (LO) mode
 and a high-criticality (HI) mode. When the observed execution
@@ -394,7 +395,8 @@ Modern automotive systems increasingly evolve from
 domain-oriented architectures composed of numerous Electronic
 Control Units~(ECUs) towards centralized and zonal
 architectures based on high-performance computing
-platforms~\cite{sdv2024,automotivehpc2023}. This transition
+platforms~\cite{autosar_ap2023,Ayres2024,wang2024ee}. % wang2024ee added: Automotive Innovation (Springer) 2024, Wang et al., DOI 10.1007/s42154-023-00266-9. Peer-reviewed survey of E/E topologies (distributed, domain, zonal, centralized) for autonomous vehicles.
+This transition
 is motivated by the growing computational requirements of
 software-defined functionalities, autonomous driving systems,
 and advanced driver assistance systems~(ADAS). A zonal
@@ -827,7 +829,8 @@ demands of ADAS, autonomous driving, and software-defined vehicle~(SDV) function
 
 The traditional domain-oriented ECU architecture, in which separate ECUs independently
 manage powertrain, chassis, body electronics, and infotainment, is giving way to
-centralized and zonal architectures~\cite{sdv2024,automotivehpc2023}. In a zonal
+centralized and zonal architectures~\cite{autosar_ap2023,Ayres2024,wang2024ee}. % wang2024ee: same as line ~398 -- Automotive Innovation 2024 survey of E/E topologies, DOI 10.1007/s42154-023-00266-9.
+In a zonal
 architecture, ECUs are grouped by physical vehicle zone rather than by function,
 with high-bandwidth Ethernet backbones connecting zone controllers to one or more
 central compute platforms. This consolidation reduces wiring harness complexity, a
@@ -840,7 +843,7 @@ adoption is accelerating: major OEMs and Tier-1 suppliers have announced central
 compute platform programs, and the AUTOSAR Adaptive Platform~\cite{autosar2023}
 provides a standardized software framework targeting these high-performance computing
 nodes with support for dynamic service deployment and POSIX-compatible execution
-environments.
+environments~\cite{pan2024sdv}.
 
 From a research perspective, this architectural transition surfaces a critical
 challenge: as more functions are consolidated onto fewer, more powerful nodes, the
