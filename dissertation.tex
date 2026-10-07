@@ -28,6 +28,26 @@
 \usepackage[utf8]{inputenc}
 \usepackage{svg}
 
+% ---- auto-numbered assumptions -------------------------------------
+\newcounter{assumption}
+\renewcommand{\theassumption}{A\arabic{assumption}}
+\crefname{assumption}{Assumption}{Assumptions}
+\Crefname{assumption}{Assumption}{Assumptions}
+\newcommand{\assum}[2]{%
+	\refstepcounter{assumption}%
+	\item[\theassumption\ #2]\label{#1}%
+}
+
+% ---- auto-numbered requirements ------------------------------------
+\newcounter{requirement}
+\renewcommand{\therequirement}{R\arabic{requirement}}
+\crefname{requirement}{Requirement}{Requirements}
+\Crefname{requirement}{Requirement}{Requirements}
+\newcommand{\req}[2]{%
+	\refstepcounter{requirement}%
+	\item[\therequirement\ #2]\label{#1}%
+}
+
 
 %-------------------------------------------------------------------------------
 % Binding correction for the title page.
@@ -331,9 +351,9 @@
 
 %\chapter{Methodology and Concepts}
 
-\input{chapters/03_approach.tex}
+\input{chapters/03_approach_new.tex}
 
-\input{chapters/base_os.tex}
+\input{chapters/base_os_new.tex}
 
 \input{chapters/migration_techniques.tex}
 

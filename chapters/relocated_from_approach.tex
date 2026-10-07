@@ -1,0 +1,120 @@
+% !TeX root = ../main.tex
+% =====================================================================
+% RELOCATED MATERIAL from the original Chapter 4 (Approach).
+%
+% Nothing here is deleted -- each block is reproduced verbatim from the
+% original draft, with a note on where it belongs. Paste each into its
+% destination chapter and rewrite in the register of that chapter.
+% =====================================================================
+
+% ---------------------------------------------------------------------
+% [1] DESTINATION: Chapter 1 (Introduction), as a "Delineation of
+%     Contributions" section, or the front matter, per the examination
+%     regulations. Rewrite as prose naming each contributor, with a
+%     citation to the corresponding student thesis. Must NOT remain in
+%     note form, and must NOT be omitted entirely.
+% ---------------------------------------------------------------------
+
+\subsection{Contributions}
+This is just conceptually speaking... But in order to better place my contribution
+
+\begin{itemize}
+	\item Task-to-Board distribution/migration planning: Toolchain for integrating ML was result of Bernhard + Robert Hamsch's thesis. My contribution: adaption to my embedded devices + include ECU, adaption to send ELF files + checkpoints, adaption to keep PTP synchronization
+	\item ECU base system (OS): Selection of FreeRTOS as base RTOS (Bernhard, probably with input from Oliver), confirmed by me. Decision of AMP over SMP in multicore case (Bernhard + me). Some inter-processor features (probably Oliver + students). My contribution: extension of ESFREE to include MC (supported by students Mahdi and Kamran). Conceptual architecture of ELF loader, wrapper task, checkpoint keeping (implementation Yinbo).
+	\item Guest task architecture: My contribution (supported by results of Yinbo): C task architecture in form of a library + simplified linker script (adapted from Yinbo's thesis)
+	\item Migration strategy HI: My contribution: concept definition. Implementation partially shown in PoC by Dorota, must be extended still + maybe will require distributed shared memory implementation?
+	\item Migration strategy LO: Concept definition (me) + implementation and PoC by Yinbo
+	\item Migration strategy Virtual ECU (LO): Concept definition (me + Bernhard) + partial implementation and PoC analysis by Roberto + adaption and integration (me + probably Mahdi)
+	\item Further system features: PTP + SOMEIP (Yinbo implementation + me/Bernhard concept), strategy for system functions (me), missing - network, other peripherals, interrupts, mem management? 
+\end{itemize}
+
+
+% ---------------------------------------------------------------------
+% [2] DESTINATION: Chapter 5 (Axcan OS).
+%     The AMP/multicore and scheduler bullets belong in the architecture
+%     and mixed-criticality scheduler sections. Note that the bullet on
+%     line 75 of the original ("as of now not possible to run same ELF on
+%     different ARM platform or inside the container") CONTRADICTS the
+%     published results and Assumption A5 -- delete it.
+% ---------------------------------------------------------------------
+
+\section{Operating System / FreeRTOS implementation + internal behavior}
+Should cover following bullet points into detail when implementation is complete
+
+\begin{itemize}
+	\item AMP multicore implementation on the Ultra96's quad-core ARM Cortex A53 (real hardware). Core 0 acts as the "master" core and cores 1-3 as "slave" cores. Core 0 interacts with master ECU and distributes tasks assigned to the board internally to the cores, following the MC (mixed-criticality) approach.
+	\item To ensure tasks are prioritized according to criticality, MC is implemented also in the base behavior of the embedded devices. Two variants on MC implementation: 1) reserved cores with core-level EDF (avoiding conflicts between criticality levels) and 2) hierarchical virtual EDF
+	\item Each core has "management" tasks (threads) to ensure proper functioning and dynamic functionalities: communication with master ECU (only master core), inter-core communication, task control and monitoring, and a scheduler thread
+	\item Communication thread responsible for communicating with other cores and master ECU (only for core 0). This includes receiving instructions to execute/stop tasks, receiving and sending back task binaries (ELF) and data files, and sending back runtime data on the status of the executed tasks and the device's health.
+	\item Task control and monitoring task involves: starting and stopping of tasks, creating new threads for the executed tasks, loading their executables, passing the stored task context to the task or storing it after task execution, collecting runtime data for the task (number of successful jobs, deadlines missed, last execution)
+	\item Scheduler thread responsible for assigning dynamic execution priorities to tasks according to both real-time constraints and criticality (except in reserved cores approach)
+	\item Virtual device implementation through a single FreeRTOS container running on ARM based server. Base system is a twin of the real device, but compiled for the actual processor in the server (as of now not possible to run same ELF on different ARM platform or inside the container... will explore if possible). Currently container executes task directly (without management overhead). If ELF can run on the container, it might make sense to first boot a clone with all the management capabilities and then load the required ELF inside the container
+	\item System tested with simulated workload with different tasks. Two types are necessary: 1) dummy tasks allow us to test high workloads by making the CPU work without the implementation effort for different tasks, 2) actual data processing tasks allow us to test the system functionality for the migration and to demonstrate it in a tangible way
+	\item Dummy tasks are implemented by adapting COBRA framework as it has demonstrated in the scope of my thesis to be an easy way of producing different workloads with variable real-time constraints
+	\item Actual tasks have yet to be implemented and tested, but some ideas: image processing (e.g.: edge detection), SLAM with LIDAR... These may need to additionally deal with inputs/outputs
+\end{itemize}
+
+
+% ---------------------------------------------------------------------
+% [3] DESTINATION: Chapter 5 (Axcan OS), inter-core communication section.
+% ---------------------------------------------------------------------
+
+\section{Internal Communication}
+The cores communicate with each other through inter-processor interrupts and ring buffers in an allocated shared memory space, allowing for the implementation of message queues for each core. Through the implementation of "post office" library [**explain behavior and refer to Horst/Wiesboeck**], each core has a thread handling the receiving of messages in the queue, allowing the actual management task to process the message further. In general, communication between any two cores of the processor is possible using this method, but most inter-core communications in this implementation occur between the master core and a slave core.
+
+
+% ---------------------------------------------------------------------
+% [4] DESTINATION: Chapter 7 (System Integration), external communication.
+% ---------------------------------------------------------------------
+
+\section{External Communication}
+\begin{itemize}
+	\item Communication with other devices enabled through LWIP (lightweight IP) library, offering basic functionality: IPv4 and v6, TCP and UDP sockets, DHCP...
+	\item Communication with master ECU through periodic TCP messages with specific format (for now using JSON)
+	\item Transmission of files (especially ELF and context) with an implementation of SOME/IP
+	\item Current limitation: only core 0 has control over the LWIP stack. Need to enable access for user applications from the other cores
+\end{itemize}
+
+
+% ---------------------------------------------------------------------
+% [5] DESTINATION: Chapter 7 (System Integration), migration planning.
+%     Chapter 4 now covers this in one sentence plus Assumption A6; the
+%     detail below (schedulability analysis extension for MC, ML model
+%     retraining, migration penalty for HI tasks) is the substance of the
+%     integration chapter.
+% ---------------------------------------------------------------------
+
+The migration planning will be adapted from previous work, namely the student theses supervised by Bernhard Blieninger. As these don't consider mixed-criticality or a multi-core implementation in the system behavior, a few changes are necessary to integrate both concepts. First, the schedulability analysis that is commonly used for selecting the best task distribution has to be extended to work with criticality levels and the use of a mixed-criticality scheduler. Here, it has to be taken into consideration whether extending and retraining the machine learning models is worth the effort, especially since this idea is still not proven as a solution and the extension with the criticality levels and other relevant information might add complexity to the net. Otherwise, implementing a mathematical schedulability analysis that considers mixed criticality is necessary. A second extension that should be performed in the planning stage is to penalize the migration of higher criticality tasks, as the migration overhead adds an additional risk for the tasks failing. Furthermore, the availability of both virtual and physical devices needs to be considered at the moment of deciding which tasks should migrate and where.
+
+
+\section{Task-Device Partitioning / Migration Planning}
+The main goal of this work is to enable the breathability of the system by making it possible to execute any task on any available virtual or physical hardware resource. However, this requires a runtime component taking decisions on where the tasks should be executed at a point in time. To achieve this, the methods explored in [**cite migration planning literature / work from Bernhard, Hamsch, etc.**] are integrated into the test setup, along with simulated task loads and hardware changes (as described in the use cases / scenarios) that will trigger the migration of tasks from one device to another. 
+
+
+% ---------------------------------------------------------------------
+% [6] DESTINATION: Chapter 8 (Results and Evaluation), workload section.
+% ---------------------------------------------------------------------
+
+	\item System tested with simulated workload with different tasks. Two types are necessary: 1) dummy tasks allow us to test high workloads by making the CPU work without the implementation effort for different tasks, 2) actual data processing tasks allow us to test the system functionality for the migration and to demonstrate it in a tangible way
+	\item Dummy tasks are implemented by adapting COBRA framework as it has demonstrated in the scope of my thesis to be an easy way of producing different workloads with variable real-time constraints
+	\item Actual tasks have yet to be implemented and tested, but some ideas: image processing (e.g.: edge detection), SLAM with LIDAR... These may need to additionally deal with inputs/outputs
+
+
+% ---------------------------------------------------------------------
+% [7] SUPERSEDED -- retained for reference only.
+%     The following passages from the original chapter are now covered by
+%     the system model, assumptions and requirements of Chapter 4:
+%       original line 6   -> A1, A2, A3
+%       original line 8   -> R1-R4, and the architecture section
+%       original line 19  -> Section "Criticality-Stratified Migration"
+%       original line 37  -> Section "Criticality Levels and Node Ceilings"
+%       original line 39  -> criticality ceiling L_k^max; AMP design decision
+%       original line 41  -> Section "Time", Eq. deadline compensation
+%       original line 45  -> HI strategy paragraph
+%       original line 47  -> LO strategy paragraph
+%       original line 49  -> intermediate levels paragraph
+%       original line 51  -> virtual-node strategy paragraph; UC3/UC4
+%       original 56-63    -> Section "Architectural Overview"
+%     Check each before discarding: the original wording on ISO 26262 and
+%     on WCET pessimism (line 37) is good and was partly reused.
+% ---------------------------------------------------------------------
